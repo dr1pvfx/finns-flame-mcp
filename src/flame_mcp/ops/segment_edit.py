@@ -1,0 +1,271 @@
+"""`segment.slip` and `segment.replace`: the two edits that move what a segment shows
+without moving where it sits. Both run behind a Timeline checkpoint (`_segment_edit`); the Flame
+side is `timeline_edit_prelude` (`_te_slip`, `_te_replace`). Measured on Flame 2025.2.4: `slip(n)`
+moves the source position n frames earlier and `smart_replace` keeps the offset from the start of
+the clip, not the source TC. Derived from that (one case): the TC alignment after a replace is
+`slip(source TC after the replace - wanted source TC)`."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import Any, Final
+
+from flame_mcp import selectors
+from flame_mcp.ops._segment_edit import (
+    CHECKPOINTED_SEGMENT_NOTE,
+    SEGMENT_REQUIRES,
+    checkpoint_spec,
+    edit_source,
+    no_undo_steps,
+    seg_args,
+    segment_target_param,
+)
+from flame_mcp.registry import Registry
+from flame_mcp.types import OperationParam, OperationSpec, Refusal, SelectorKind
+
+SLIP_OP: Final[str] = "segment.slip"
+REPLACE_OP: Final[str] = "segment.replace"
+MODES: Final[tuple[str, ...]] = ("media", "media_and_fx")
+_SOURCE_KINDS: Final[tuple[SelectorKind, ...]] = ("wiretap", "path", "selection")
+
+_SLIP_DESCRIPTION = (
+    "Slip one segment's source under its record (PySegment.slip): the segment stays where it is "
+    "on the timeline and shows other frames of its source. Sign: offset > 0 "
+    "takes the source toward its head -- source_in (and source_out) go down by offset, head "
+    "handle goes down and tail handle up by offset; offset < 0 the other way. record_in / "
+    "record_out do not change. The return value False is not a failure (result.returned is only "
+    "reported). Flame does not refuse a slip beyond the handle: it stops at the handle without a "
+    "word (head for a positive offset, tail for a negative one), so a slip that would go past "
+    "it is refused up front (PRECONDITION_UNMET, before anything is copied or journaled; "
+    "result.available is the handle in that direction, an integer or 'infinite', and "
+    "result.handle has both): also a Gap, a sequence inside a library or a Batch group. "
+    "INVALID_ARGS: offset 0. "
+    "Judged by reading the segment back, never by the return value: nothing in the track changed "
+    "= SILENT_NOOP; a change that is not the offset asked for = FLAME_API_ERROR with before and "
+    "after (result.moved is how far source_in really went; the sequence is still revertible). "
+    "A segment that has a Timewarp effect and whose source length differs from its record "
+    "length: sourceIn / sourceOut are not judged (result.timewarp true, sourceJudged false, "
+    "sourceNotJudgedBecause says why, expectedDeltas.sourceIn / sourceOut null, deltas as read "
+    "back); the record side, head and tail are judged as above. Any other segment: "
+    "sourceJudged true. "
+    "A head / tail that is 'infinite' before the edit is not judged (result.handleJudged, "
+    "handleNotJudgedBecause says why, expectedDeltas.head / tail null); the record side still is. "
+    "result: before / after (type, sourceName, recordIn / recordOut / sourceIn / sourceOut / "
+    "head / tail / recordDuration, PyTime as {timecode, frame}; recordOut / sourceOut are the "
+    "last frame (inclusive)), requested, moved, deltas "
+    "(after - before, frames) / expectedDeltas, position {version, track, index, recordIn, "
+    "selector (a 'segment' selector by record_in), selectorByIndex}, track (segmentCount, "
+    "startFrame, endFrame = the last frame (inclusive) of the track, trailingGap), returned. "
+    "To line a replaced segment up with the "
+    "source timecode you want, pass the difference between segment.replace's result.after "
+    "sourceIn timecode and the one you want (slip(n) takes source_in down by n). "
+    + CHECKPOINTED_SEGMENT_NOTE
+)
+
+_REPLACE_DESCRIPTION = (
+    "Replace the media of one segment with another clip, keeping the segment's place on the "
+    "timeline. mode 'media' (default) = PySegment.smart_replace_media (the segment's Timeline FX "
+    "stay); 'media_and_fx' = PySegment.smart_replace (the segment's Timeline FX are dropped "
+    "when the clip has none of its own: result.effects shows them before and after; a Resize "
+    "that Flame added by itself because of a bit depth difference stays, measured on Flame "
+    "2026.2.3). `source` "
+    "is the clip to put in (a wiretap / path / selection selector of a PyClip). "
+    "Where the new clip's frames land depends on the segment (measured on Flame 2025.2.4). "
+    "On an Unlinked Video segment (made from an EDL) it keeps the offset from the start of the "
+    "clip and does not match the source timecode: the same range of frames counted from the "
+    "first frame of the new clip is used, whatever timecode that clip starts at. On a linked "
+    "segment of an 8K DPX clip Flame matched by source timecode: a new clip that contains the "
+    "segment's source range keeps sourceIn / sourceOut (the segment used 989364-989386; a clip "
+    "of the same tape read separately as 989350-989400 gave the same range, only head / tail "
+    "changed), and a clip that does not contain it is refused with FLAME_API_ERROR "
+    "'RuntimeError: Invalid source_clip.', nothing changed (journal changed=false): 989380-989410 "
+    "(overlaps the end only), 989387-989410, 989340-989350, and a clip of another shot were all "
+    "refused. A 1-frame clip (a still: one DPX frame, or YELLOW / CYAN) was accepted whatever "
+    "its timecode, and the segment then shows that one frame (head / tail 'infinite'). "
+    "Read 'Invalid source_clip' as: this clip's range cannot hold the segment's range; pick a "
+    "clip that contains it. Record and head are unchanged; tail follows "
+    "the new clip's length; source_name becomes the new clip's name. To line up a source "
+    "timecode, compare result.after.sourceIn (timecode and frame) with the one you want and pass "
+    "the difference to segment.slip (slip(n) takes source_in down by n). It reaches only as "
+    "far as the handle goes. "
+    "Whether it took effect is judged from what a read can see: sourceName, the source range, "
+    "head and tail, and the segment's name and source size (sourceWidth / sourceHeight). One of "
+    "them moving gives result.verified true and is listed in result.changed; an attribute that "
+    "cannot be read is null and left out of the comparison. Nothing moved and the new clip's "
+    "name, width or height differs from the segment's: SILENT_NOOP (a clip too short for the "
+    "range the segment uses changes nothing in Flame and raises nothing). Nothing moved and the "
+    "new clip has the segment's name and size (the clip the segment already has, or a comp of "
+    "the same name and size): ok with result.verified false and a notice -- a read cannot tell "
+    "whether it was swapped, so export the segment and compare the pixels. The sequence's "
+    "fingerprint sees neither the name nor the size, so journal.changed reads false for a "
+    "replace that moved only those; journal.revert still restores the segment. Refused up "
+    "front (PRECONDITION_UNMET, before anything is copied or journaled): a Gap, "
+    "a source that is not a PyClip (a sequence, a reel ...), a sequence inside a library or a "
+    "Batch group; INVALID_ARGS: a mode that is neither of the two, a source that is a segment "
+    "selector. "
+    "result: mode, source {type, name, uid, wiretapId, selector}, before / after (type, "
+    "sourceName, recordIn / recordOut / sourceIn / sourceOut -- frame AND timecode; recordOut / "
+    "sourceOut are the last frame (inclusive) -- head, tail, "
+    "recordDuration; also name, sourceWidth, sourceHeight, filePath, sourceUid, null when "
+    "unreadable -- the last two are shown, not judged), verified, changed (which of "
+    "sourceName / sourceIn / sourceOut / head / tail / name / sourceWidth / sourceHeight "
+    "changed), effects {before, after} (types), position {version, track, index, recordIn, "
+    "selector (by record_in, with expect_source_name = the new source name), selectorByIndex}, "
+    "warnings, returned, connected {count, error} (the number of OTHER segments "
+    "PySegment.connected_segments() answers, read before the replace: the list holds the "
+    "segment itself, which is left out, so a segment with no connection gives 0) and notices. "
+    "When the segment has "
+    "connected segments (segment.connections), the replacement is propagated to them in other "
+    "sequences (measured on Flame 2025.2.4) and the checkpoint below does not cover them: "
+    "result.notices says how many. "
+    + CHECKPOINTED_SEGMENT_NOTE
+    + " On a segment of a reel clip, the refusals tried there (clips that did not contain the "
+    "range) were the same as on a sequence's segment, so the clip as parent was not their cause."
+)
+
+
+def _slip_to_python(args: Mapping[str, Any]) -> str:
+    offset = int(args["offset"])
+    return edit_source(
+        args,
+        f"_te_slip_check(target, target__parent, {offset!r})",
+        f"_te_slip({seg_args(args)}, {offset!r})",
+    )
+
+
+def _slip_precheck(args: Mapping[str, Any], policy: Any) -> Refusal | None:
+    if args.get("offset") == 0:
+        return Refusal(
+            "INVALID_ARGS",
+            "offset must not be 0 (positive takes the source toward its head, negative toward "
+            "its tail)",
+        )
+    return None
+
+
+def _replace_to_python(args: Mapping[str, Any]) -> str:
+    mode = args.get("mode", "media")
+    return edit_source(
+        args,
+        f"_te_replace_check(target, target__parent, source, {mode!r})",
+        f"_te_replace({seg_args(args)}, source, {mode!r})",
+        selectors.resolve_code(args["source"], "source"),
+    )
+
+
+def _replace_precheck(args: Mapping[str, Any], policy: Any) -> Refusal | None:
+    mode = args.get("mode", "media")
+    if mode not in MODES:
+        return Refusal("INVALID_ARGS", f"mode must be one of {list(MODES)}, got {mode!r}")
+    target = args.get("target")
+    if not isinstance(target, Mapping) or target.get("kind") != "segment":
+        return Refusal("INVALID_ARGS", "target must be a 'segment' selector")
+    problems = selectors.validate_selector(args.get("source"), _SOURCE_KINDS)
+    if problems:
+        return Refusal(
+            "INVALID_ARGS",
+            "source must be a wiretap / path / selection selector of a clip: "
+            + "; ".join(problems),
+        )
+    return None
+
+
+def register(registry: Registry) -> None:
+    registry.register(
+        OperationSpec(
+            name=SLIP_OP,
+            category="segment",
+            description=_SLIP_DESCRIPTION,
+            effect="reversible",
+            undo="checkpoint",
+            params=(
+                segment_target_param(),
+                OperationParam(
+                    name="offset",
+                    type="number",
+                    description=(
+                        "Frames, a non-zero integer: positive takes the source toward its head "
+                        "(source_in goes DOWN by offset), negative toward its tail. As far as "
+                        "the handle goes."
+                    ),
+                    required=True,
+                    integer=True,
+                ),
+            ),
+            accepts=("segment",),
+            to_python=_slip_to_python,
+            undo_steps=no_undo_steps,
+            precheck=_slip_precheck,
+            checkpoint=checkpoint_spec(
+                SLIP_OP, lambda args: f"before segment.slip ({args['offset']})"
+            ),
+            requires=("PySegment.slip", *SEGMENT_REQUIRES),
+        )
+    )
+    registry.register(
+        OperationSpec(
+            name=REPLACE_OP,
+            category="segment",
+            description=_REPLACE_DESCRIPTION,
+            effect="reversible",
+            undo="checkpoint",
+            params=(
+                segment_target_param(),
+                OperationParam(
+                    name="source",
+                    type="selector",
+                    description=(
+                        "A wiretap / path / selection selector of the PyClip to put in (it may "
+                        "be in a reel or a library)."
+                    ),
+                    required=True,
+                ),
+                OperationParam(
+                    name="mode",
+                    type="string",
+                    description=(
+                        "'media' (default): smart_replace_media, the segment's Timeline FX stay. "
+                        "'media_and_fx': smart_replace, the Timeline FX do not stay when the clip "
+                        "has none of its own."
+                    ),
+                    required=False,
+                    default="media",
+                    non_empty=True,
+                ),
+            ),
+            accepts=("segment", *_SOURCE_KINDS),
+            to_python=_replace_to_python,
+            undo_steps=no_undo_steps,
+            precheck=_replace_precheck,
+            sample_args={
+                "target": {
+                    "kind": "segment",
+                    "parent": {"kind": "wiretap", "id": "s"},
+                    "version": 0,
+                    "track": 0,
+                    "index": 0,
+                },
+                "source": {"kind": "wiretap", "id": "c"},
+                "mode": "media",
+            },
+            checkpoint=checkpoint_spec(
+                REPLACE_OP, lambda args: f"before segment.replace ({args.get('mode', 'media')})"
+            ),
+            requires=(
+                "PySegment.smart_replace_media",
+                "PySegment.smart_replace",
+                "PySegment.effects",
+                "PySegment.connected_segments",
+                "PySegment.name",
+                "PySegment.source_width",
+                "PySegment.source_height",
+                "PySegment.file_path",
+                "PySegment.source_uid",
+                "PyClip.name",
+                "PyClip.width",
+                "PyClip.height",
+                "PyTimelineFX.type",
+                *SEGMENT_REQUIRES,
+            ),
+        )
+    )
