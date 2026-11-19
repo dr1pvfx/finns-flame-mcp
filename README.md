@@ -55,7 +55,7 @@ There are 115 operations in 14 categories. For the full list, see [docs/ops.md](
 | | |
 | --- | --- |
 | OS | macOS |
-| Flame | Upstream native results on 2025.2.4 and 2026.2.3. This preview registered its hook in 2027.1. See [qualification](docs/qualification.md). |
+| Flame | Upstream results on 2025.2.4 and 2026.2.3. This preview passed the scoped native checks on 2027.1. See [qualification](docs/qualification.md). |
 | Python | 3.11 or later (for the server) |
 | MCP client | A client that can run a local stdio server. Tested with Claude Code. |
 

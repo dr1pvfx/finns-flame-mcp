@@ -25,10 +25,18 @@ local trace and compare the journal group shown in the apply result.
 
 ## 0.5.0 preview
 
-On Apple Silicon macOS, Flame 2027.1 registered the installed hook. Using
-Flame's bundled Python 3.13 and Qt 6.8.3 outside the application, synthetic
-focused-shot and anchor calls passed through the stdio client, Unix socket,
-and Qt main-thread dispatcher. The trace recorded outcomes without shot names.
-The real Flame project chooser rejected the restored synthetic project on the
-test station. Live scene writes and render comparisons remain unqualified
-for 2027.1 in this distribution.
+On Apple Silicon macOS, Flame 2027.1 loaded the installed hook and a disposable
+local project. Native tests created a timeline, imported a synthetic picture
+clip, placed it on the timeline and read the focused shot's source and record
+timecodes. The anchor report flagged the movie's unknown source origin. A
+rename preview left the timeline unchanged. An altered fingerprint produced
+`CONFLICT`, the original fingerprint applied the rename, and `journal.revert`
+restored the original name. Local tracing correlated the rename and journal
+group without recording object names or file paths.
+
+The native test also reproduced intermittent queued main-thread timeouts.
+Opening the floating assistant and keeping it active allowed the checks above
+to complete and a native export to write one ProRes movie. An independent
+decode of a reference frame and its exported counterpart measured a mean
+luma difference of 1.469 on a 0–255 scale at 640 × 360. Reliable unattended
+dispatch on 2027.1 remains unqualified.
