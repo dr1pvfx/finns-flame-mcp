@@ -42,6 +42,7 @@ SHORTEN = "timeline.shorten"
 
 ACCEPTING_OPS = [
     "desktop.info",
+    "timeline.anchor_report",
     CHECKPOINT,
     CREATE_TRACK,
     CREATE_VERSION,

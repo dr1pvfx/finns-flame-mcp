@@ -46,7 +46,7 @@ def _bridge_dir() -> str:
     if override:
         return override
     return os.path.join(
-        os.path.expanduser("~"), "Library", "Application Support", "flame-mcp", "bridge"
+        os.path.expanduser("~"), "Library", "Application Support", "finns-flame-mcp", "bridge"
     )
 
 

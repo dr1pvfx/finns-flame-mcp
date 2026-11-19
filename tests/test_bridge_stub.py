@@ -165,6 +165,22 @@ def test_load_impl_success_starts_bridge(
     assert stub_module._state["bridge"].tag == "v1"
 
 
+def test_installed_hook_starts_from_its_default_app_support_directory(
+    stub_module: Any, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.delenv("FLAME_MCP_BRIDGE_DIR", raising=False)
+    monkeypatch.setitem(sys.modules, "flame", FakeFlameModule())
+    bridge_dir = tmp_path / "Library" / "Application Support" / "finns-flame-mcp" / "bridge"
+    bridge_dir.mkdir(parents=True, mode=0o700)
+    _write_impl(bridge_dir, GOOD_BODY_V1)
+
+    stub_module.app_initialized("qa")
+
+    assert stub_module._state["error"] is None
+    assert stub_module._state["bridge"].project_name == "qa"
+
+
 def test_body_syntax_error_keeps_menu_and_holds_error(
     stub_module: Any, bridge_dir: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
