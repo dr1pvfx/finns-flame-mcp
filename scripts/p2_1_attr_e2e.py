@@ -19,7 +19,7 @@ project `flame_mcp_probe`.
 
 Every stage is wrapped so one failure does not hide the others, and the results
 JSON is rewritten after every recorded step
-(`~/Library/Application Support/flame-mcp/p2/p2_1_attr_e2e_<ts>.json`), so a
+(`~/Library/Application Support/finns-flame-mcp/p2/p2_1_attr_e2e_<ts>.json`), so a
 crash mid-run still leaves everything up to that point. `flame.exit()` runs in a
 `finally`.
 
@@ -104,7 +104,7 @@ from p1_mcp_e2e import (  # noqa: E402
     mcp_session,
 )
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 NEW_READ_OPS: Final[frozenset[str]] = frozenset(
     {
         "desktop.get_attributes",

@@ -44,7 +44,7 @@ _IMPL_MODULE_NAME = "flame_mcp_bridge_impl"
 _EXPECTED_BRIDGE_ABI = 1
 
 SCRATCH_DIR = (
-    Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "qtselftest"
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "qtselftest"
 )
 
 
@@ -115,7 +115,7 @@ def _bridge_dir() -> str:
     override = os.environ.get("FLAME_MCP_BRIDGE_DIR")
     if override:
         return override
-    return str(Path.home() / "Library" / "Application Support" / "flame-mcp" / "bridge")
+    return str(Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "bridge")
 
 
 def _load_impl() -> Any:

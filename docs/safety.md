@@ -284,7 +284,7 @@ Files you ask to save to a path of your own, such as the output of `batch.save_s
 
 #### Tightening what is already there
 
-At start-up, the server and the bridge also tighten what already exists in the flame-mcp folder (`~/Library/Application Support/flame-mcp`). The folder itself becomes 0700. So do the `run`, `journal` (with `checkpoints`, `setups` and `ordered`), `spill`, `logs` and `bridge` folders, and every folder in them. Every file in them becomes 0600. A folder you pointed `FLAME_MCP_JOURNAL_DIR`, `FLAME_MCP_RUN_DIR` or `FLAME_MCP_SPILL_DIR` at is tightened the same way if it is inside the flame-mcp folder, and left alone if it is not.
+At start-up, the server and the bridge also tighten what already exists in the flame-mcp folder (`~/Library/Application Support/finns-flame-mcp`). The folder itself becomes 0700. So do the `run`, `journal` (with `checkpoints`, `setups` and `ordered`), `spill`, `logs` and `bridge` folders, and every folder in them. Every file in them becomes 0600. A folder you pointed `FLAME_MCP_JOURNAL_DIR`, `FLAME_MCP_RUN_DIR` or `FLAME_MCP_SPILL_DIR` at is tightened the same way if it is inside the flame-mcp folder, and left alone if it is not.
 
 The change is limited to what is safe to change:
 

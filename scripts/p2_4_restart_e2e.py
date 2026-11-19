@@ -107,7 +107,7 @@ from p2_3c_render_e2e import (
 
 from flame_mcp.journal import Journal
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 GROUPS: Final[tuple[str, ...]] = ("G", "H", "K")
 WRITERS: Final[dict[str, str]] = {"H": "write_h", "K": "write_k"}
 RANGES: Final[dict[str, tuple[int, int]]] = {"H": (1, 48), "K": (1, 72)}

@@ -41,7 +41,7 @@ The unit tests are in `tests/`. They use a fake Flame, so they need no Flame.
 
 Some unit tests start a bridge on a Unix socket. A socket path must be short, and pytest's
 temporary folder on macOS is too long, so these tests make a folder under
-`~/Library/Application Support/flame-mcp/scratch/` and remove it when they finish. The parent
+`~/Library/Application Support/finns-flame-mcp/scratch/` and remove it when they finish. The parent
 folders stay, empty.
 
 ```bash
@@ -106,7 +106,7 @@ See [Safety in real-Flame tests](safety.md#safety-in-real-flame-tests) for the f
 
 ### Prepare the media
 
-The tests read their media from `~/Library/Application Support/flame-mcp/probe_project/media/`.
+The tests read their media from `~/Library/Application Support/finns-flame-mcp/probe_project/media/`.
 
 * `clip1.mov`, `clip2.mov` and `clip3.mov` (red, green and blue), directly in that folder. The tests
   expect clips of 24 frames, 1920x1080, at 23.976 fps. Make them with `scripts/make_clip_media.sh`.
@@ -170,7 +170,7 @@ Two settings change a run:
 ### Where the results go
 
 Each client writes a result file named `<name>_e2e_<timestamp>.json`. The files are in
-`~/Library/Application Support/flame-mcp/p1/`, `.../p2/` or `.../p3/`. The table names the folder
+`~/Library/Application Support/finns-flame-mcp/p1/`, `.../p2/` or `.../p3/`. The table names the folder
 of each test. The launch log, crash samples and each run's own journal and files are in the same
 folder.
 

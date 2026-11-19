@@ -1,6 +1,6 @@
 """Completion check of the op catalog.
 
-The 111 real ops (via `ops.register_all`, the real `api_symbols_2025.2.4.json`) show up through
+The 115 real ops (via `ops.register_all`, the real `api_symbols_2025.2.4.json`) show up through
 the actual MCP tool surface, and READONLY hides/rejects exactly the write ops (`desktop.rename`
 and every `*.set_attributes`) in all 3 policy checkpoints. No bridge/socket is needed here:
 `flame_catalog`/`flame_do`'s POLICY_DENIED path and `tools/list` never touch the bridge.
@@ -25,7 +25,7 @@ from flame_mcp.registry import Registry, sample_selector_for
 from flame_mcp.server import create_server
 from flame_mcp.types import SelectorKind
 
-PROJECTED_OP_COUNT = 111
+PROJECTED_OP_COUNT = 115
 """The number of real ops the listing is projected for; the whole listing must still fit."""
 PROJECTED_BUDGET_SHARE = 0.8
 LISTING_KEYS = {"name", "category", "effect", "undo", "summary", "params", "accepts"}
@@ -168,6 +168,10 @@ EXPECTED_OP_NAMES = {
     "timeline.move_track",
     "timeline.shorten",
     "timeline.compare",
+    "timeline.anchor_report",
+    "timeline.focused_shot",
+    "review.rename_apply",
+    "review.rename_preview",
     "timeline.usage",
     "segment.connections",
     "segment.create_connection",
@@ -175,6 +179,7 @@ EXPECTED_OP_NAMES = {
     "segment.sync_connections",
 }
 WRITE_OP_NAMES = {
+    "review.rename_apply",
     "project.save",
     "eval.run",  # READONLY refuses eval.run whatever effect the call declares
     "node.create",
@@ -267,13 +272,13 @@ def _structured(result: Any) -> dict[str, Any]:
     return sc
 
 
-def test_registered_op_count_is_103() -> None:
+def test_registered_op_count_is_115() -> None:
     registry = make_full_registry()
-    assert len(registry.list_ops()) == 111
+    assert len(registry.list_ops()) == 115
     assert {op.name for op in registry.list_ops()} == EXPECTED_OP_NAMES
 
 
-def test_flame_catalog_lists_all_103_ops(run_dir: Path) -> None:
+def test_flame_catalog_lists_all_115_ops(run_dir: Path) -> None:
     async def main() -> None:
         registry = make_full_registry()
         policy = Policy.from_env({"FLAME_MCP_ENABLE_EVAL": "1"})
@@ -290,7 +295,7 @@ def test_flame_catalog_lists_all_103_ops(run_dir: Path) -> None:
     anyio.run(main)
 
 
-def test_flame_do_tool_enum_lists_all_103_ops(run_dir: Path) -> None:
+def test_flame_do_tool_enum_lists_all_115_ops(run_dir: Path) -> None:
     async def main() -> None:
         registry = make_full_registry()
         policy = Policy.from_env({"FLAME_MCP_ENABLE_EVAL": "1"})

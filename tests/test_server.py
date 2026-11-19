@@ -41,7 +41,7 @@ from flame_mcp_bridge import impl
 from test_bridge_impl import FakeFlame, FakeMainLoop, FakeTimer
 from test_transport import FakeRawBridge, _close_and_write_crash_handler
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "srv"
+SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "srv"
 
 
 @pytest.fixture
@@ -426,7 +426,7 @@ def test_flame_version_info_reports_leftover_inflight_record(run_dir: Path) -> N
                     "thread": "main",
                     "timeoutS": 10.0,
                     "sentAt": "2026-09-28T10:52:35+00:00",
-                    "socket": str(run_dir / "flame-mcp-2025.2.4.sock"),
+                    "socket": str(run_dir / "fmp-2025.2.4.sock"),
                     "bridgePid": 4242,
                     "codeSha256": "deadbeef",
                     "code": "_result = 1",
@@ -901,7 +901,7 @@ def test_flame_context_bridge_lost_is_ok_false_with_crash(run_dir: Path, scratch
     shell_log_path = scratch_dir / "shell.log"
     shell_log_path.write_text("")
     fake_bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _close_and_write_crash_handler(shell_log_path)
+        run_dir / "fmp-fake.sock", _close_and_write_crash_handler(shell_log_path)
     )
     try:
 

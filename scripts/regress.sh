@@ -5,7 +5,7 @@
 # Usage: scripts/regress.sh [name ...]
 #   Without names, every e2e that `scripts/run_e2e.sh --list` prints (34), in that order.
 #
-# Output goes to ~/Library/Application Support/flame-mcp/p3/regress_<yymmdd_HHMMSS>/:
+# Output goes to ~/Library/Application Support/finns-flame-mcp/p3/regress_<yymmdd_HHMMSS>/:
 #   <name>_<n>.log   the full output of one run
 #   summary.txt      one line per run: <name>#<n> start=<HH:MM:SS> rc=<exit code>
 #                    abnormal=<lines reporting an abnormal termination> <the exit route line>
@@ -21,7 +21,7 @@ set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$SCRIPT_DIR/.." && pwd)"
-P3="$HOME/Library/Application Support/flame-mcp/p3"
+P3="$HOME/Library/Application Support/finns-flame-mcp/p3"
 FLAME_RUNNING_PATTERN='flame.app/Contents/MacOS/flame'
 TIMEOUT_S=900
 # The route line is "exit route", printed by e2e_lib.sh and by run_flame_with_bridge.sh (the

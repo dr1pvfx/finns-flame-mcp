@@ -39,7 +39,7 @@ OUTPUT_DIR_NAMES = ("OUTPUT_DIR", "SCRATCH_DIR")
 
 def candidate(project: str | None, pid: int = 4242) -> transport.BridgeCandidate:
     return transport.BridgeCandidate(
-        path=Path("/nonexistent/flame-mcp-4242.sock"),
+        path=Path("/nonexistent/fmp-4242.sock"),
         pid=pid,
         flame_version="2025.2.4",
         project_name=project,

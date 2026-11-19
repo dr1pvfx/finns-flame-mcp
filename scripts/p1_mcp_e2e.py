@@ -73,7 +73,7 @@ Steps:
      subprocess)
 
 Every step's envelope is written verbatim to
-~/Library/Application Support/flame-mcp/p1/p1_mcp_e2e_<ts>.json. Value
+~/Library/Application Support/finns-flame-mcp/p1/p1_mcp_e2e_<ts>.json. Value
 comparisons in this script's own code only ever compare already-JSON-decoded
 plain values (str/int/...) -- the `_v(...)`/`.get_value()` unwrapping
 happens inside the code strings sent to the bridge, before `_result` is set,
@@ -108,10 +108,10 @@ from flame_mcp.compact import RESPONSE_ENV  # noqa: E402
 from flame_mcp.ops import register_all  # noqa: E402
 from flame_mcp.registry import Registry  # noqa: E402
 
-OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p1"
-RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "run"
+OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
+RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
 MEDIA_DIR = (
-    Path.home() / "Library" / "Application Support" / "flame-mcp" / "probe_project" / "media"
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "probe_project" / "media"
 )
 CLIP_NAMES = ("clip1.mov", "clip2.mov", "clip3.mov")
 GAP_SEQUENCE_PREFIX: Final[str] = "U5S"

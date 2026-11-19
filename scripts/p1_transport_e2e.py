@@ -27,7 +27,7 @@ Steps:
      stays, and crash.app_log_tail is not empty.
   e. Discovery after the kill returns BRIDGE_UNAVAILABLE (the stale socket file should remain;
      check that this still gives neither AMBIGUOUS nor an exception).
-  f. Write the result to ~/Library/Application Support/flame-mcp/p1/p1_transport_e2e_<ts>.json
+  f. Write the result to ~/Library/Application Support/finns-flame-mcp/p1/p1_transport_e2e_<ts>.json
      and print the list of stale sockets and in-flight files left behind (they are not
      deleted).
 
@@ -57,8 +57,8 @@ import e2e_guard  # noqa: E402
 
 from flame_mcp import applog, transport  # noqa: E402
 
-OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p1"
-RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "run"
+OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
+RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
 
 FLAME_VERSION = e2e_guard.e2e_flame_version()
 FLAME_BIN_PATTERN = re.compile(
@@ -301,7 +301,7 @@ def step_e_discover_after_kill(run_dir: Path, results: dict[str, Any]) -> None:
 
 
 def leftover_listing(run_dir: Path) -> dict[str, list[str]]:
-    sockets = sorted(str(p) for p in run_dir.glob("flame-mcp-*.sock"))
+    sockets = sorted(str(p) for p in run_dir.glob("fmp-*.sock"))
     inflight_dir = run_dir / "inflight"
     inflight = sorted(str(p) for p in inflight_dir.glob("*.json")) if inflight_dir.is_dir() else []
     return {"sockets": sockets, "inflight": inflight}

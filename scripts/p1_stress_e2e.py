@@ -17,7 +17,7 @@ Usage (meant to be called from scripts/run_flame_with_bridge.sh; it also runs on
 For the positive control (the old implementation), deploy a different impl.py through
 BRIDGE_IMPL_SRC of scripts/deploy_bridge_dev.sh, then call this script with --label old.
 
-The result is written to ~/Library/Application Support/flame-mcp/p1/p1_stress_<label>_<ts>.json.
+The result is written to ~/Library/Application Support/finns-flame-mcp/p1/p1_stress_<label>_<ts>.json.
 """
 
 from __future__ import annotations
@@ -39,8 +39,8 @@ import e2e_guard  # noqa: E402
 
 from flame_mcp import transport  # noqa: E402
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p1"
-RUN_DIR_DEFAULT: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "run"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
+RUN_DIR_DEFAULT: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
 
 DEFAULT_WAIT_SOCKET_S: Final[float] = 120.0
 BRIDGE_POLL_INTERVAL_S: Final[float] = 1.0
@@ -52,7 +52,7 @@ EXEC_CODE: Final[str] = "_result = flame.projects.current_project.name"
 
 
 def _wait_for_bridge(run_dir: Path, timeout_s: float) -> transport.BridgeCandidate:
-    """Glob `run_dir` for `flame-mcp-*.sock` and confirm liveness with a
+    """Glob `run_dir` for `fmp-*.sock` and confirm liveness with a
     hello, exactly like `transport._discover` already does internally --
     reusing it here instead of re-implementing glob+hello."""
     deadline = time.monotonic() + timeout_s

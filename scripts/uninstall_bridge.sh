@@ -2,12 +2,12 @@
 #
 # Removes what install_bridge.sh deployed.
 #
-#   stub  /opt/Autodesk/shared/python/flame_mcp_bridge.py and the flame_mcp_bridge.*.pyc files
+#   stub  /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py and the flame_mcp_bridge.*.pyc files
 #         in its __pycache__
-#   body  impl.py and __pycache__ in ~/Library/Application Support/flame-mcp/bridge/ (the
+#   body  impl.py and __pycache__ in ~/Library/Application Support/finns-flame-mcp/bridge/ (the
 #         directory itself only when nothing else is left in it)
 #
-# Regular files are copied to ~/Library/Application Support/flame-mcp/backups/ first (the same
+# Regular files are copied to ~/Library/Application Support/finns-flame-mcp/backups/ first (the same
 # place as install_bridge.sh, with the suffix pre_uninstall_). A symlink is never removed, only
 # reported, and the exit status is then 1. A real uninstall refuses to run while Flame is running;
 # --dry-run removes nothing, so it only warns and goes on.
@@ -20,8 +20,8 @@
 # FLAME_MCP_STUB_DST replaces the stub target (for tests only; leave it unset).
 set -euo pipefail
 
-STUB_DST="${FLAME_MCP_STUB_DST:-/opt/Autodesk/shared/python/flame_mcp_bridge.py}"
-APP_SUPPORT="$HOME/Library/Application Support/flame-mcp"
+STUB_DST="${FLAME_MCP_STUB_DST:-/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py}"
+APP_SUPPORT="$HOME/Library/Application Support/finns-flame-mcp"
 BRIDGE_DIR="$APP_SUPPORT/bridge"
 IMPL_DST="$BRIDGE_DIR/impl.py"
 BACKUPS_DIR="$APP_SUPPORT/backups"

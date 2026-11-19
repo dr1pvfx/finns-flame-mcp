@@ -37,7 +37,7 @@ from flame_mcp.journal import Journal, new_id, now_iso  # noqa: E402
 
 Results = dict[str, Any]
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p3"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p3"
 TARGET_PROJECT: Final[str] = e2e_guard.probe_project_name()
 CKPT_ENV: Final[str] = "FLAME_MCP_CHECKPOINT_LIBRARY"
 NAME_PREFIX: Final[str] = "PFX2"

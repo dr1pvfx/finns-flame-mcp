@@ -30,7 +30,7 @@ from flame_mcp import applog, transport
 from flame_mcp_bridge import impl
 from test_bridge_impl import FakeFlame, FakeMainLoop, FakeTimer
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "p13"
+SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p13"
 
 # Read at import time, before `_fast_client_timeouts` shrinks the live constant.
 PRODUCTION_CLIENT_TIMEOUT_MARGIN_S = transport.CLIENT_TIMEOUT_MARGIN_S
@@ -138,7 +138,7 @@ def test_discover_zero_sockets_is_unavailable(run_dir: Path) -> None:
 
 
 def test_discover_stale_socket_file_only_is_unavailable(run_dir: Path) -> None:
-    (run_dir / "flame-mcp-9999.sock").write_text("not a real socket")
+    (run_dir / "fmp-9999.sock").write_text("not a real socket")
     failure = transport._discover(run_dir)
     assert isinstance(failure, transport._DiscoveryFailure)
     assert failure.error_code == "BRIDGE_UNAVAILABLE"
@@ -227,7 +227,7 @@ def test_discover_flame_bridge_socket_env_selects_that_one(
 def test_discover_flame_bridge_socket_env_dead_path_is_unavailable(
     run_dir: Path, scratch_dir: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    dead_path = scratch_dir / "flame-mcp-dead.sock"
+    dead_path = scratch_dir / "fmp-dead.sock"
     monkeypatch.setenv(transport.BRIDGE_SOCKET_ENV, str(dead_path))
     failure = transport._discover(run_dir)
     assert isinstance(failure, transport._DiscoveryFailure)
@@ -531,7 +531,7 @@ def test_bridge_lost_when_connection_closes_after_reading_request(
     shell_log_path = scratch_dir / "shell.log"
     shell_log_path.write_text("")  # establish the file before mark() sees it
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _close_and_write_crash_handler(shell_log_path)
+        run_dir / "fmp-fake.sock", _close_and_write_crash_handler(shell_log_path)
     )
     try:
         result = transport.exec("_result = 1", thread="main", timeout_s=1.0, run_dir=run_dir)
@@ -550,7 +550,7 @@ def test_bridge_lost_when_connection_closes_after_reading_request(
 
 
 def test_bridge_lost_when_client_times_out_and_hello_also_fails(run_dir: Path) -> None:
-    bridge = FakeRawBridge(run_dir / "flame-mcp-fake.sock", _hello_once_then_hang_handler(2.0))
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _hello_once_then_hang_handler(2.0))
     try:
         result = transport.exec("_result = 1", thread="main", timeout_s=0.05, run_dir=run_dir)
     finally:
@@ -573,7 +573,7 @@ def test_bridge_lost_waits_crash_log_grace_period_before_reading(
     shell_log_path = scratch_dir / "shell.log"
     shell_log_path.write_text("")
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _close_and_write_crash_handler(shell_log_path)
+        run_dir / "fmp-fake.sock", _close_and_write_crash_handler(shell_log_path)
     )
     try:
         started = time.monotonic()
@@ -590,7 +590,7 @@ def test_app_log_note_reports_rotation(run_dir: Path, scratch_dir: Path) -> None
     app_log_path = scratch_dir / "app.log"
     app_log_path.write_text("[error] before rotation\n")
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _rotate_app_log_then_succeed_handler(app_log_path)
+        run_dir / "fmp-fake.sock", _rotate_app_log_then_succeed_handler(app_log_path)
     )
     try:
         result = transport.exec("_result = 1", thread="main", timeout_s=1.0, run_dir=run_dir)
@@ -608,7 +608,7 @@ def test_timeout_when_hello_answers_but_exec_never_replies(run_dir: Path) -> Non
     # it will eventually run this exec (it may be sitting QUEUED/RUNNING on
     # its side) -- the in-flight record must survive a TIMEOUT, not just a
     # BRIDGE_LOST, and its path must be surfaced on the result.
-    bridge = FakeRawBridge(run_dir / "flame-mcp-fake.sock", _answer_hello_hang_exec_handler(2.0))
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _answer_hello_hang_exec_handler(2.0))
     try:
         result = transport.exec("_result = 1", thread="main", timeout_s=0.05, run_dir=run_dir)
     finally:
@@ -623,7 +623,7 @@ def test_timeout_when_hello_answers_but_exec_never_replies(run_dir: Path) -> Non
 
 
 def test_protocol_error_raised_on_protocol_error_response(run_dir: Path) -> None:
-    bridge = FakeRawBridge(run_dir / "flame-mcp-fake.sock", _protocol_error_handler)
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _protocol_error_handler)
     try:
         with pytest.raises(transport.BridgeProtocolError):
             transport.exec("_result = 1", thread="main", timeout_s=1.0, run_dir=run_dir)
@@ -633,7 +633,7 @@ def test_protocol_error_raised_on_protocol_error_response(run_dir: Path) -> None
 
 
 def test_protocol_error_raised_on_unknown_error_code(run_dir: Path) -> None:
-    bridge = FakeRawBridge(run_dir / "flame-mcp-fake.sock", _unknown_error_code_handler)
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _unknown_error_code_handler)
     try:
         with pytest.raises(transport.BridgeProtocolError):
             transport.exec("_result = 1", thread="main", timeout_s=1.0, run_dir=run_dir)
@@ -656,7 +656,7 @@ def _write_fake_inflight(
                 "thread": "main",
                 "timeoutS": 10.0,
                 "sentAt": sent_at,
-                "socket": str(run_dir / "flame-mcp-fake.sock"),
+                "socket": str(run_dir / "fmp-fake.sock"),
                 "bridgePid": 12345,
                 "codeSha256": "deadbeef",
                 "code": "_result = 1",
@@ -752,7 +752,7 @@ def test_discover_reads_the_features_a_bridge_announces(
 @pytest.mark.parametrize("features", [None, "client_handle", 7, {"a": 1}])
 def test_a_bridge_without_a_usable_features_list_has_none(run_dir: Path, features: Any) -> None:
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _recording_handler([], features=features)
+        run_dir / "fmp-fake.sock", _recording_handler([], features=features)
     )
     try:
         candidate = transport._discover(run_dir)
@@ -765,7 +765,7 @@ def test_a_bridge_without_a_usable_features_list_has_none(run_dir: Path, feature
 
 def test_only_string_features_are_kept(run_dir: Path) -> None:
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _recording_handler([], features=["client_handle", 3, None])
+        run_dir / "fmp-fake.sock", _recording_handler([], features=["client_handle", 3, None])
     )
     try:
         assert transport.probe_features(run_dir) == ("client_handle",)
@@ -780,7 +780,7 @@ def test_probe_features_with_no_bridge_is_empty(run_dir: Path) -> None:
 def test_exec_sends_the_handle_to_a_bridge_that_announces_client_handle(run_dir: Path) -> None:
     seen: list[dict[str, Any]] = []
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _recording_handler(seen, features=["client_handle"])
+        run_dir / "fmp-fake.sock", _recording_handler(seen, features=["client_handle"])
     )
     try:
         result = transport.exec(
@@ -795,7 +795,7 @@ def test_exec_sends_the_handle_to_a_bridge_that_announces_client_handle(run_dir:
 
 def test_exec_does_not_send_the_handle_to_a_bridge_that_does_not_know_it(run_dir: Path) -> None:
     seen: list[dict[str, Any]] = []
-    bridge = FakeRawBridge(run_dir / "flame-mcp-fake.sock", _recording_handler(seen, features=None))
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _recording_handler(seen, features=None))
     try:
         result = transport.exec(
             "_result = 1", thread="main-async", timeout_s=1.0, run_dir=run_dir, handle=CLIENT_HANDLE
@@ -810,7 +810,7 @@ def test_exec_does_not_send_the_handle_to_a_bridge_that_does_not_know_it(run_dir
 def test_exec_without_a_handle_sends_none(run_dir: Path) -> None:
     seen: list[dict[str, Any]] = []
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock", _recording_handler(seen, features=["client_handle"])
+        run_dir / "fmp-fake.sock", _recording_handler(seen, features=["client_handle"])
     )
     try:
         transport.exec("_result = 1", thread="main-async", timeout_s=1.0, run_dir=run_dir)
@@ -824,7 +824,7 @@ def test_a_lost_connection_still_says_which_features_the_bridge_had_and_keeps_th
 ) -> None:
     seen: list[dict[str, Any]] = []
     bridge = FakeRawBridge(
-        run_dir / "flame-mcp-fake.sock",
+        run_dir / "fmp-fake.sock",
         _recording_handler(seen, features=["client_handle"], answer=False),
     )
     try:

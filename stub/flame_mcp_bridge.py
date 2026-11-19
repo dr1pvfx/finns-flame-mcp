@@ -1,11 +1,11 @@
 """The flame-mcp bridge stub: the only file placed under /opt/Autodesk.
 
 The bridge body lives in impl.py. Deployed as a real file copy (never a
-symlink) to /opt/Autodesk/shared/python/flame_mcp_bridge.py, or read via
+symlink) to /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py, or read via
 DL_PYTHON_HOOK_PATH during development. Must stay parseable under the Python
 3.9.7 that Flame 2023.3.2 also uses to scan shared/python/: no `match`, no
 runtime `X | Y`. Everything the body needs lives in impl.py, loaded from
-FLAME_MCP_BRIDGE_DIR (default ~/Library/Application Support/flame-mcp/bridge).
+FLAME_MCP_BRIDGE_DIR (default ~/Library/Application Support/finns-flame-mcp/bridge).
 
 Annotations use typing.Optional/Dict rather than 3.10+ `X | None` / builtin
 generics, and `from __future__ import annotations` keeps them as unevaluated

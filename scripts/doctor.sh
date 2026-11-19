@@ -3,16 +3,16 @@
 # Diagnoses the production install, as a table. It writes nothing.
 #
 # What it checks:
-#   - stub: whether /opt/Autodesk/shared/python/flame_mcp_bridge.py is a regular file and its
+#   - stub: whether /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py is a regular file and its
 #     sha256 equals the repository stub's (a mismatch or a missing file is a FAIL)
 #   - impl: the sha256 of the production bridge body,
-#     ~/Library/Application Support/flame-mcp/bridge/impl.py
+#     ~/Library/Application Support/finns-flame-mcp/bridge/impl.py
 #   - impl_dev: the sha256 of the development bridge body,
-#     ~/Library/Application Support/flame-mcp/bridge_dev/impl.py (where
+#     ~/Library/Application Support/finns-flame-mcp/bridge_dev/impl.py (where
 #     scripts/deploy_bridge_dev.sh deploys), on its own row
 #   - socket: whether sockets exist in run/ and whether they answer (hello)
 #   - inflight: how many in-flight records (run/inflight/*.json) there are
-#   - dev_hooks: whether ~/Library/Application Support/flame-mcp/dev_hooks/flame_mcp_bridge.py
+#   - dev_hooks: whether ~/Library/Application Support/finns-flame-mcp/dev_hooks/flame_mcp_bridge.py
 #     exists. If it does, its sha256 is compared with the production stub's (INFO if equal, WARN
 #     if different or not comparable: when Flame is started for development, only one of the two
 #     modules named flame_mcp_bridge gets loaded)
@@ -26,8 +26,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 STUB_REPO="$REPO_ROOT/stub/flame_mcp_bridge.py"
 IMPL_REPO="$REPO_ROOT/src/flame_mcp_bridge/impl.py"
 
-STUB_DST="/opt/Autodesk/shared/python/flame_mcp_bridge.py"
-APP_SUPPORT="$HOME/Library/Application Support/flame-mcp"
+STUB_DST="/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py"
+APP_SUPPORT="$HOME/Library/Application Support/finns-flame-mcp"
 IMPL_DST="$APP_SUPPORT/bridge/impl.py"
 # shellcheck source=bridge_dev_env.sh
 source "$SCRIPT_DIR/bridge_dev_env.sh"
@@ -107,7 +107,7 @@ sock_matches=()
 if [ -d "$RUN_DIR" ]; then
     while IFS= read -r -d '' f; do
         sock_matches+=("$f")
-    done < <(find "$RUN_DIR" -maxdepth 1 -name "flame-mcp-*.sock" -print0 2>/dev/null)
+    done < <(find "$RUN_DIR" -maxdepth 1 -name "fmp-*.sock" -print0 2>/dev/null)
 fi
 if [ "${#sock_matches[@]}" -eq 0 ]; then
     _row "socket" "WARN" "no sockets in $RUN_DIR (the bridge is not running)"

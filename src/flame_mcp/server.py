@@ -43,7 +43,7 @@ from flame_mcp.transport import elapsed_ms
 from flame_mcp.types import NO_DEFAULT, SelectorKind
 from flame_mcp_bridge.impl import BRIDGE_ABI
 
-SERVER_VERSION: Final[str] = "0.4.0"
+SERVER_VERSION: Final[str] = "0.5.0"
 TESTED_FLAME_VERSIONS: Final[tuple[str, ...]] = ("2025.2.4", "2026.2.3")
 
 TOOL_VERSION_INFO: Final[str] = "flame_version_info"
@@ -833,7 +833,7 @@ def create_server(
         raise MCPError(types.METHOD_NOT_FOUND, f"unknown tool: {name}")
 
     return Server(
-        "flame-mcp",
+        "finns-flame-mcp",
         version=SERVER_VERSION,
         instructions=instructions_for(response_mode),
         on_list_tools=on_list_tools,

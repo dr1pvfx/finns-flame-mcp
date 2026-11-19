@@ -88,7 +88,7 @@ from p2_2a_journal_e2e import (
 
 from flame_mcp.journal import Journal
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 ENABLE_EVAL: Final[str] = "FLAME_MCP_ENABLE_EVAL"
 GROUPS: Final[tuple[str, ...]] = ("A", "B", "C", "D", "E")
 EVAL_MAKE_PAIR: Final[str] = "\n".join(

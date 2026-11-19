@@ -531,7 +531,7 @@ def calls(tmp_path: Path, name: str) -> str:
 def test_print_config_matches_what_the_old_script_said(old: OldConfig, tmp_path: Path) -> None:
     got = print_config(old.name, tmp_path)
 
-    app_support = tmp_path / "Library" / "Application Support" / "flame-mcp"
+    app_support = tmp_path / "Library" / "Application Support" / "finns-flame-mcp"
     assert got["name"] == old.name
     assert got["runner"] == "standard"
     assert got["client"] == str(REPO / old.client)
@@ -737,7 +737,7 @@ def test_a_running_flame_stops_every_e2e_before_deploying_or_opening(
 
 
 def only_run(home: Path) -> Path:
-    dirs = sorted((home / "Library" / "Application Support" / "flame-mcp" / "p3").glob("regress_*"))
+    dirs = sorted((home / "Library" / "Application Support" / "finns-flame-mcp" / "p3").glob("regress_*"))
     dirs = [d for d in dirs if d.is_dir()]
     assert len(dirs) == 1
     return dirs[0]
@@ -756,7 +756,7 @@ def test_regress_records_a_skip_for_a_running_flame_then_the_clean_up_skip_and_d
         r"p3_1a_read#1 start=\d\d:\d\d:\d\d SKIPPED: Flame is already running", summary[0]
     )
     assert summary[1:] == ["clean SKIPPED: Flame is already running", "DONE"]
-    latest = home / "Library" / "Application Support" / "flame-mcp" / "p3" / "regress_latest.txt"
+    latest = home / "Library" / "Application Support" / "finns-flame-mcp" / "p3" / "regress_latest.txt"
     assert latest.read_text(encoding="utf-8").strip() == str(out)
     assert calls(tmp_path, "open.log") == ""
 

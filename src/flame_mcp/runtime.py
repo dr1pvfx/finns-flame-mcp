@@ -50,6 +50,7 @@ from flame_mcp.opschema import validate_op_args
 from flame_mcp.policy import Denial, Policy, deny_operation
 from flame_mcp.registry import RegisteredOperation, Registry
 from flame_mcp.setup_work import set_journal_directory
+from flame_mcp.tracing import traced_call
 from flame_mcp.transport import elapsed_ms
 from flame_mcp.types import ServerOpError
 
@@ -245,6 +246,28 @@ class Runtime:
         set_journal_directory(self.journal.directory)
 
     def call(
+        self,
+        op_name: str,
+        raw_args: Any,
+        *,
+        group: str | None = None,
+        reverts: str | None = None,
+        reverts_intent: str | None = None,
+        precondition: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return traced_call(
+            op_name,
+            lambda: self._call(
+                op_name,
+                raw_args,
+                group=group,
+                reverts=reverts,
+                reverts_intent=reverts_intent,
+                precondition=precondition,
+            ),
+        )
+
+    def _call(
         self,
         op_name: str,
         raw_args: Any,

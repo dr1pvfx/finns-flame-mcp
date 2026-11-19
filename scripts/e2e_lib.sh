@@ -25,7 +25,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # shellcheck source=e2e_flame_env.sh
 source "$SCRIPT_DIR/e2e_flame_env.sh"
-APP_SUPPORT="$HOME/Library/Application Support/flame-mcp"
+APP_SUPPORT="$HOME/Library/Application Support/finns-flame-mcp"
 DEV_HOOKS_DIR="$APP_SUPPORT/dev_hooks"
 # shellcheck source=bridge_dev_env.sh
 source "$SCRIPT_DIR/bridge_dev_env.sh"
@@ -114,7 +114,7 @@ e2e_deploy() {
 #   0, whether or not there was a socket to remove.
 #######################################
 e2e_clear_sockets() {
-    rm -f "$RUN_DIR"/flame-mcp-*.sock 2>/dev/null || true
+    rm -f "$RUN_DIR"/fmp-*.sock 2>/dev/null || true
 }
 
 #######################################
@@ -277,7 +277,7 @@ e2e_launch_flame() {
 e2e_poll_socket() {
     local waited=0
     while [ "$waited" -lt "$SOCKET_WAIT_S" ]; do
-        if compgen -G "$RUN_DIR/flame-mcp-*.sock" >/dev/null; then
+        if compgen -G "$RUN_DIR/fmp-*.sock" >/dev/null; then
             return 0
         fi
         sleep 1
@@ -515,7 +515,7 @@ e2e_report_exit_route() {
 e2e_report_sockets_gone() {
     local remaining_socks
     echo "--- ${E2E_TAG}sockets must be gone (app_exited check) ---"
-    remaining_socks=$(ls "$RUN_DIR"/flame-mcp-*.sock 2>/dev/null || true)
+    remaining_socks=$(ls "$RUN_DIR"/fmp-*.sock 2>/dev/null || true)
     if [ -z "$remaining_socks" ]; then
         echo "OK: no sockets remain."
     else

@@ -1,5 +1,5 @@
 """Every test gets its own journal and spill directories: nothing here may write to, or sweep,
-the real `~/Library/Application Support/flame-mcp/journal/` or `spill/` (a `Journal()` built
+the real `~/Library/Application Support/finns-flame-mcp/journal/` or `spill/` (a `Journal()` built
 without an explicit directory reads FLAME_MCP_JOURNAL_DIR, and the startup sweep of old spill
 files reads FLAME_MCP_SPILL_DIR)."""
 

@@ -32,6 +32,9 @@ def _list_to_python(args: Mapping[str, Any]) -> str:
         "\n".join(
             [
                 "_libs = list(flame.projects.current_project.current_workspace.libraries)",
+                "if " + repr(not args.get("include_system", True)) + ":",
+                "    _libs = [_x for _x in _libs if _v(_x.name) not in "
+                "             (\x27Timeline FX\x27, \x27Grabbed References\x27)]",
                 f"_limit = {limit!r}",
                 f"_offset = {offset!r}",
                 "_total = len(_libs)",
@@ -126,6 +129,12 @@ def register(registry: Registry) -> None:
             params=(
                 limit_param(),
                 offset_param(),
+                OperationParam(
+                    name="include_system",
+                    type="boolean",
+                    default=True,
+                    description="Include Flame system libraries by name.",
+                ),
             ),
             to_python=_list_to_python,
             requires=(

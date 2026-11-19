@@ -154,7 +154,7 @@ def real_path(env: Env) -> str:
 @needs_ffmpeg
 def test_it_makes_the_three_clips_in_the_default_folder_and_force_replaces_them(env: Env) -> None:
     path = real_path(env)
-    default = env.home / "Library" / "Application Support" / "flame-mcp" / "probe_project" / "media"
+    default = env.home / "Library" / "Application Support" / "finns-flame-mcp" / "probe_project" / "media"
     first = env.run(path=path)
     assert first.returncode == 0, first.stderr
     assert listing(default) == list(CLIPS)

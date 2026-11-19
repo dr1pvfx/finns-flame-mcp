@@ -31,11 +31,11 @@ import json, os, subprocess, sys, time
 from pathlib import Path
 
 home = Path(os.environ["HOME"])
-app = home / "Library" / "Application Support" / "flame-mcp"
+app = home / "Library" / "Application Support" / "finns-flame-mcp"
 name = Path(__file__).name.removesuffix("_e2e.py")
 with (Path(os.environ["FAKE_CALLS"]) / "client_argv.log").open("a") as fh:
     fh.write(json.dumps([name, *sys.argv[1:]]) + "\\n")
-sockets = list((app / "run").glob("flame-mcp-*.sock"))
+sockets = list((app / "run").glob("fmp-*.sock"))
 (Path(os.environ["FAKE_CALLS"]) / "sockets_seen.log").open("a").write(f"{name} {len(sockets)}\\n")
 
 results = app / os.environ["FAKE_RESULTS_SUBDIR"]
@@ -90,8 +90,8 @@ dump='import json, sys; print(json.dumps(sys.argv[1:]))'
 "$FAKE_PYTHON" -c "$dump" "$@" >> "$FAKE_CALLS/open_argv.log"
 echo "$@" >> "$FAKE_CALLS/open.log"
 touch "$FAKE_CALLS/open_ran"
-mkdir -p "$HOME/Library/Application Support/flame-mcp/run"
-touch "$HOME/Library/Application Support/flame-mcp/run/flame-mcp-1.sock"
+mkdir -p "$HOME/Library/Application Support/finns-flame-mcp/run"
+touch "$HOME/Library/Application Support/finns-flame-mcp/run/fmp-1.sock"
 nohup "$FAKE_PYTHON" "$FAKE_STANDIN" "$FAKE_MARKER.sh" >/dev/null 2>&1 &
 echo $! > "$FAKE_CALLS/flame.pid"
 exit 0
@@ -137,7 +137,7 @@ class Sandbox:
         self.calls = root / "calls"
         self.repo = root / "repo"
         self.shell_log = root / "shell.log"
-        self.app_support = self.home / "Library" / "Application Support" / "flame-mcp"
+        self.app_support = self.home / "Library" / "Application Support" / "finns-flame-mcp"
         self.calls.mkdir(parents=True)
         self.home.mkdir()
         (self.repo / "scripts").mkdir(parents=True)

@@ -49,7 +49,7 @@ items and its timeout is 120 s. Record the name of the current Batch group and t
 and after each stage, and read the lists again at the end to record what remains. Stop at the
 first TIMEOUT, BRIDGE_* error or abort inside Flame (the re-read is still done when possible).
 
-The result is written to ~/Library/Application Support/flame-mcp/p2/p2_4_clean_<mode>_<ts>.json
+The result is written to ~/Library/Application Support/finns-flame-mcp/p2/p2_4_clean_<mode>_<ts>.json
 (saved after every stage).
 """
 

@@ -71,7 +71,7 @@ def test_default_dir_follows_the_env_override(
     assert Journal().directory == tmp_path / "elsewhere"
     monkeypatch.delenv(JOURNAL_DIR_ENV)
     assert default_journal_dir() == (
-        Path.home() / "Library" / "Application Support" / "flame-mcp" / "journal"
+        Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "journal"
     )
 
 

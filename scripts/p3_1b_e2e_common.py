@@ -50,7 +50,7 @@ from flame_mcp.journal import Journal, new_id, now_iso  # noqa: E402
 
 Results = dict[str, Any]
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p3"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p3"
 CLIP_FILES: Final[tuple[tuple[str, Path], ...]] = (
     ("clip1", MEDIA_DIR / "clip1.mov"),
     ("clip2", MEDIA_DIR / "clip2.mov"),

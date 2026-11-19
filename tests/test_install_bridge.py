@@ -79,7 +79,7 @@ def test_dry_run_never_creates_the_backups_directory(tmp_path: Path, flame_runni
     proc, home = run_installer(tmp_path, "--dry-run", flame_running=flame_running)
 
     assert proc.returncode == 0, proc.stderr
-    assert not (home / "Library" / "Application Support" / "flame-mcp" / "backups").exists()
+    assert not (home / "Library" / "Application Support" / "finns-flame-mcp" / "backups").exists()
 
 
 def test_install_as_root_is_refused_before_anything_is_written(tmp_path: Path) -> None:

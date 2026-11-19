@@ -98,7 +98,7 @@ from flame_mcp.registry import Registry  # noqa: E402
 
 Results = dict[str, Any]
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p3"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p3"
 TARGET_PROJECT: Final[str] = e2e_guard.probe_project_name()
 NAME_PREFIX: Final[str] = "PFX3E"
 CLIP_FILES: Final[tuple[str, ...]] = ("clip1.mov", "clip2.mov", "clip3.mov", "clip1.mov")

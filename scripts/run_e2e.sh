@@ -19,7 +19,7 @@
 # run_<name>_e2e.sh, which uses e2e_lib.sh for the steps that are the same.
 #
 # Per-name differences are the table below and nothing else:
-#   resultsDir   results directory under ~/Library/Application Support/flame-mcp/
+#   resultsDir   results directory under ~/Library/Application Support/finns-flame-mcp/
 #   stageFilter  yes: the result listing skips the per-stage copies (..._stage_<x>.json)
 #   extraArgs    yes: E2E_EXTRA_ARGS (split on whitespace) is passed on to the client
 #   crashCheck   yes: after the client returns, shell.log is checked for an abnormal

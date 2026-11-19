@@ -105,7 +105,7 @@ from flame_mcp.registry import Registry  # noqa: E402
 
 Results = dict[str, Any]
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p3"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p3"
 TARGET_PROJECT: Final[str] = e2e_guard.probe_project_name()
 NAME_PREFIX: Final[str] = "PR12E"
 SIDE_CLIP_FILES: Final[dict[str, tuple[str, ...]]] = {

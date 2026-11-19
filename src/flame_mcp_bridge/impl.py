@@ -1,7 +1,7 @@
 """The in-Flame half of the flame-mcp socket transport.
 
 Stdlib only. Deployed as a single file copy into
-``~/Library/Application Support/flame-mcp/bridge/impl.py`` and loaded by the
+``~/Library/Application Support/finns-flame-mcp/bridge/impl.py`` and loaded by the
 stub via ``compile()``/``exec()``. It never imports the ``flame_mcp`` package.
 
 Threading contract: handler threads (accept loop, per-connection handlers) never
@@ -87,7 +87,7 @@ STOP_HANDLER_JOIN_TOTAL_S: Final[float] = 1.0
 
 
 def _default_root() -> Path:
-    return Path.home() / "Library" / "Application Support" / "flame-mcp"
+    return Path.home() / "Library" / "Application Support" / "finns-flame-mcp"
 
 
 def _default_run_dir() -> Path:
@@ -458,7 +458,7 @@ class Bridge:
                 self._logger,
                 extra_dirs=[self._run_dir, self._results_dir, self._log_dir],
             )
-        sock_path = self._run_dir / f"flame-mcp-{self._version}.sock"
+        sock_path = self._run_dir / f"fmp-{self._version}.sock"
         encoded = str(sock_path).encode("utf-8")
         if len(encoded) > MAX_SOCK_PATH_BYTES:
             reason = (

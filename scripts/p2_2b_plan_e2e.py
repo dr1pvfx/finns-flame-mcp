@@ -78,7 +78,7 @@ from p2_2a_journal_e2e import (
     version_info,
 )
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 BLUR_NODES: Final[int] = 7  # a: 0-2, b: 3-4, c: 3-4 (again, after b), e: 5, f and g: 6
 PLAN_LABEL_A: Final[str] = "p2_2b stage a"
 SUMMARY_WRITES: Final[int] = 11  # one more than the writes a plan may hold before 'auto' summarises

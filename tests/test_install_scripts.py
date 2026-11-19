@@ -27,7 +27,7 @@ class Env:
         self.fake_bin.mkdir()
         self.stub_dir = root / "opt" / "python"
         self.stub = self.stub_dir / "flame_mcp_bridge.py"
-        self.app = self.home / "Library" / "Application Support" / "flame-mcp"
+        self.app = self.home / "Library" / "Application Support" / "finns-flame-mcp"
         self.bridge_dir = self.app / "bridge"
         self.impl = self.bridge_dir / "impl.py"
         self.backups = self.app / "backups"
@@ -259,7 +259,7 @@ def test_uninstall_with_nothing_installed_is_a_clean_noop(env: Env) -> None:
 def test_uninstall_dry_run_names_the_real_stub_location_without_an_override(env: Env) -> None:
     result = env.run(UNINSTALL, "--dry-run", override_stub=False)
     assert result.returncode == 0, result.stderr
-    assert "/opt/Autodesk/shared/python/flame_mcp_bridge.py" in result.stdout
+    assert "/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py" in result.stdout
     assert "[dry-run]" in result.stdout or "Not found:" in result.stdout
 
 

@@ -21,7 +21,7 @@ set -euo pipefail
 
 FFMPEG="$(command -v ffmpeg || true)"
 FFPROBE="$(command -v ffprobe || true)"
-DEFAULT_OUT_DIR="$HOME/Library/Application Support/flame-mcp/probe_project/media"
+DEFAULT_OUT_DIR="$HOME/Library/Application Support/finns-flame-mcp/probe_project/media"
 WIDTH=1920
 HEIGHT=1080
 RATE="24000/1001"

@@ -35,7 +35,7 @@ _CHMOD_NOFOLLOW: Final[bool] = os.chmod in os.supports_follow_symlinks
 
 def default_root() -> Path:
     """The flame-mcp directory; the default journal, run and spill directories are below it."""
-    return Path.home() / "Library" / "Application Support" / "flame-mcp"
+    return Path.home() / "Library" / "Application Support" / "finns-flame-mcp"
 
 
 def make_private_dirs(directory: Path) -> None:

@@ -2,12 +2,12 @@
 #
 # Production installer.
 #
-#   stub  -> /opt/Autodesk/shared/python/flame_mcp_bridge.py   (real file, mode 0644)
-#   body  -> ~/Library/Application Support/flame-mcp/bridge/impl.py (real file, mode 0600)
+#   stub  -> /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py   (real file, mode 0644)
+#   body  -> ~/Library/Application Support/finns-flame-mcp/bridge/impl.py (real file, mode 0600)
 #
 # A symlink breaks Flame's "Reload Python Hooks", so if a target is a symlink the script refuses
 # and does nothing. An existing regular file is copied to
-# ~/Library/Application Support/flame-mcp/backups/ before it is replaced.
+# ~/Library/Application Support/finns-flame-mcp/backups/ before it is replaced.
 # Each file is written to a temporary file next to its target and moved into place with mv; both
 # temporary files are ready (and compared with the source) before either target is replaced, so
 # Flame never reads a half-written file. The stub only loads a body that is owned by the user and
@@ -29,8 +29,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 STUB_SRC="$REPO_ROOT/stub/flame_mcp_bridge.py"
 IMPL_SRC="$REPO_ROOT/src/flame_mcp_bridge/impl.py"
 
-STUB_DST="${FLAME_MCP_STUB_DST:-/opt/Autodesk/shared/python/flame_mcp_bridge.py}"
-APP_ROOT="$HOME/Library/Application Support/flame-mcp"
+STUB_DST="${FLAME_MCP_STUB_DST:-/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py}"
+APP_ROOT="$HOME/Library/Application Support/finns-flame-mcp"
 BRIDGE_DIR="$APP_ROOT/bridge"
 IMPL_DST="$BRIDGE_DIR/impl.py"
 

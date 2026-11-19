@@ -281,7 +281,7 @@ def test_the_default_directories_are_below_one_flame_mcp_directory(
     monkeypatch.setenv("HOME", str(tmp_path))
     for name in (JOURNAL_DIR_ENV, RUN_DIR_ENV, envelope.SPILL_DIR_ENV):
         monkeypatch.delenv(name, raising=False)
-    root = tmp_path / "Library" / "Application Support" / "flame-mcp"
+    root = tmp_path / "Library" / "Application Support" / "finns-flame-mcp"
     assert private_fs.default_root() == root
     assert default_journal_dir() == root / "journal"
     assert default_run_dir() == root / "run"
@@ -328,4 +328,4 @@ def test_main_gives_build_server_the_default_flame_mcp_directory(
 
     main_mod.main()
 
-    assert seen == {"app_root": tmp_path / "Library" / "Application Support" / "flame-mcp"}
+    assert seen == {"app_root": tmp_path / "Library" / "Application Support" / "finns-flame-mcp"}

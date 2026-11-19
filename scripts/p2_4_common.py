@@ -20,7 +20,7 @@ from p2_2a_journal_e2e import Ctx, rec, tx
 
 from flame_mcp.journal import Index, Journal
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 EXIT_RETRY_EVERY_S: Final[float] = 3.0
 EXIT_RETRY_TOTAL_S: Final[float] = 180.0
 """flame.exit() is retried this often, for this long, while the bridge answers

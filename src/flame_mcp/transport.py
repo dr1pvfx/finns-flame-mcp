@@ -219,7 +219,7 @@ def _hello(path: Path, timeout_s: float) -> dict[str, Any] | None:
 
 def _discover(run_dir: Path) -> BridgeCandidate | _DiscoveryFailure:
     override = os.environ.get(BRIDGE_SOCKET_ENV)
-    paths = [Path(override)] if override else sorted(run_dir.glob("flame-mcp-*.sock"))
+    paths = [Path(override)] if override else sorted(run_dir.glob("fmp-*.sock"))
     if not paths:
         return _DiscoveryFailure("BRIDGE_UNAVAILABLE", f"no bridge socket found under {run_dir}")
 

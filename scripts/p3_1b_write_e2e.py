@@ -298,7 +298,7 @@ def dry_run() -> int:
     register_all(registry)
     failures = 0
     files_dir = (
-        Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "p31b_dry"
+        Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p31b_dry"
     )
     ids = placeholder_ids(files_dir)
     print("===== calls through flame_do =====")

@@ -12,6 +12,7 @@ from flame_mcp.ops import (
     batch,
     batch_delete,
     checkpoints,
+    delivery,
     desktop,
     desktop_arrange,
     desktop_delete,
@@ -21,6 +22,7 @@ from flame_mcp.ops import (
     desktop_reformat,
     desktop_reorder,
     desktop_tc,
+    editorial_review,
     eval,
     journal,
     library,
@@ -65,6 +67,8 @@ def register_all(registry: Registry) -> None:
     mediahub.register(registry)
     library.register(registry)
     timeline.register(registry)
+    delivery.register(registry)
+    editorial_review.register(registry)
     timeline_checkpoints.register(registry)
     timeline_colour.register(registry)
     timeline_build.register(registry)

@@ -36,13 +36,13 @@ Three decisions shape the rest of this page:
 
 ### Where files live
 
-Apart from the stub and Flame's own logs, everything is under `~/Library/Application Support/flame-mcp/`.
+Apart from the stub and Flame's own logs, everything is under `~/Library/Application Support/finns-flame-mcp/`.
 
 | Path | Content |
 | --- | --- |
-| `/opt/Autodesk/shared/python/flame_mcp_bridge.py` | The stub. |
+| `/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py` | The stub. |
 | `bridge/impl.py` | The bridge body. |
-| `run/flame-mcp-VERSION.sock` | The bridge socket. VERSION is the Flame version. The directory is mode 0700 and the socket is mode 0600. |
+| `run/fmp-VERSION.sock` | The bridge socket. VERSION is the Flame version. The directory is mode 0700 and the socket is mode 0600. |
 | `run/inflight/` | One record for each bridge call that has not been answered. Files are mode 0600 and the directory is mode 0700. The server removes records older than 7 days when it starts. |
 | `run/results/` | Results of calls that outlived their wait, kept until fetched. The directory is mode 0700. |
 | `journal/journal_YYYYMMDD.jsonl` | The write journal. Files are mode 0600 and the directory is mode 0700. The server removes files untouched for 30 days when it starts. |
@@ -129,8 +129,8 @@ The bridge is the only code that runs inside Flame. It is split into a small stu
 
 The bridge has two files:
 
-* The **stub**, `/opt/Autodesk/shared/python/flame_mcp_bridge.py`, is the only file placed under `/opt/Autodesk`. Flame loads it as a Python hook. It is copied there once, as a real file and not a symlink, and rarely changes.
-* The **body**, `~/Library/Application Support/flame-mcp/bridge/impl.py`, holds the socket server and the relay to the main thread. The stub loads it.
+* The **stub**, `/opt/Autodesk/shared/python/finns_flame_mcp_bridge.py`, is the only file placed under `/opt/Autodesk`. Flame loads it as a Python hook. It is copied there once, as a real file and not a symlink, and rarely changes.
+* The **body**, `~/Library/Application Support/finns-flame-mcp/bridge/impl.py`, holds the socket server and the relay to the main thread. The stub loads it.
 
 Splitting the bridge this way has these effects:
 
@@ -170,11 +170,11 @@ Starting the bridge:
 3. Bind the socket (mode 0600) and start the accept thread.
 4. Start the relay timer on the main thread (see [Threads](#threads)).
 
-The socket file name includes the Flame version, for example `flame-mcp-2025.2.4.sock`. The bridge refuses a socket path longer than 103 bytes.
+The socket file name includes the Flame version, for example `fmp-2025.2.4.sock`. The bridge refuses a socket path longer than 103 bytes.
 
 ### Finding the bridge
 
-The server does not trust that a socket file means a live bridge. For each `flame-mcp-*.sock` in the `run` directory, it connects and sends `hello`, waiting up to 1 second. A dead socket file refuses the connection and is skipped. The `hello` reply carries the ABI, Flame version, process ID, project name, and optional features.
+The server does not trust that a socket file means a live bridge. For each `fmp-*.sock` in the `run` directory, it connects and sends `hello`, waiting up to 1 second. A dead socket file refuses the connection and is skipped. The `hello` reply carries the ABI, Flame version, process ID, project name, and optional features.
 
 * No live bridge: `BRIDGE_UNAVAILABLE`. Wait for Flame to start and open a project.
 * Exactly one live bridge: use it.

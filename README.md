@@ -1,17 +1,31 @@
-# flame-mcp
+# Finn's Flame MCP
 
-English | [日本語](./README.ja.md)
+A local MCP server for Autodesk Flame finishing. This distribution combines the
+structured operations and journal from mnt0414, source-anchor diagnostics from
+Abraham's Flame MCP, and an exact-preview rename workflow using a manifest fingerprint
+adapted from Chris Nollert's forge-bridge.
 
-**Let an AI assistant read and edit your Autodesk Flame projects through the Model Context Protocol (MCP).**
+- **Inspect editorial state.** Read the focused shot with
+  `timeline.focused_shot`. Use `timeline.anchor_report` to flag unusual source
+  anchors. A trim can explain a difference, so verify flagged shots against the offline.
+- **Review single renames.** Send a stable Wiretap target and name to
+  `review.rename_preview`. After reviewing the manifest, send its fingerprint to
+  `review.rename_apply`. It re-reads the name and identity, then uses the journaled
+  rename with a compare-and-swap precondition. Other upstream tools retain their
+  operation-specific policy and journal behavior.
+- **Trace calls.** Set `FINNS_FLAME_MCP_TRACE` to a private JSONL file path to
+  record operation names, parent spans, timing, errors and journal group IDs.
+  Arguments, project paths, and response content stay out of this trace.
 
-flame-mcp connects an MCP client, such as Claude Code, to Flame while Flame is running. Describe the task in natural language. The assistant finds a matching operation (op) and runs it in Flame. flame-mcp records each operation that it runs, and you can undo most changes later. Some changes can't be undone (see [Undo](#undo)).
+Install in a Python 3.11+ virtual environment and run `scripts/install_bridge.sh`
+with Flame closed. The MCP client command is `finns-flame-mcp` from that venv.
+For integrations, `finns-flame-call` reads one tool request on stdin and
+returns the structured reply from a real stdio MCP session.
 
-> [!NOTE]
-> **Status: beta.** flame-mcp is ready to try, and reports from real work decide when it leaves beta. Try it on a test project first. To look inside a project without changing anything, use [read-only mode](#read-only-mode). A short report is welcome even when nothing went wrong (see [Questions, requests, and bug reports](#questions-requests-and-bug-reports)).
->
-> flame-mcp has been tested with **Flame 2025.2.4 and 2026.2.3 on macOS**. It also starts on other Flame versions and shows a warning, but those versions haven't been tested. This is an independent project by one person. It isn't made, endorsed, or supported by Autodesk, and it isn't related to [abrahamADSK/flame-mcp](https://github.com/abrahamADSK/flame-mcp), which has the same name.
-
-[What it does](#what-it-does) · [Before you start](#before-you-start) · [Quick start](#quick-start) · [Safety and privacy](#safety-and-privacy) · [Undo](#undo) · [Configuration](#configuration) · [Troubleshooting](#troubleshooting) · [Limitations](#limitations) · [How it works](#how-it-works) · [Documentation](#documentation) · [Questions, requests, and bug reports](#questions-requests-and-bug-reports)
+The combined repository is licensed under [GPL-3.0-only](LICENSE). Upstream
+licenses, pinned revisions and fork review are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The metadata below describes the inherited upstream operations. Check the
+[qualification notes](docs/qualification.md) for actual release evidence.
 
 ## What it does
 
@@ -25,7 +39,7 @@ flame-mcp works best for organizing projects and for routine tasks that follow f
 | Batch | Create, connect, and set up nodes. Save and load setups. Compare a setup with one saved earlier to find values changed by hand. Render. |
 | Multi-step plans | Run several operations as one procedure (`plan.run`). |
 
-There are 111 operations in 13 categories. For the full list, see [docs/ops.md](docs/ops.md).
+There are 115 operations in 14 categories. For the full list, see [docs/ops.md](docs/ops.md).
 
 ## Before you start
 
@@ -63,7 +77,7 @@ Replace `python3.12` with any installed Python 3.11 or later. The `/usr/bin/pyth
 The installer copies two real files:
 
 - `flame_mcp_bridge.py`: the entry point that Flame loads when it starts. It's installed in `/opt/Autodesk/shared/python/`.
-- `impl.py`: the main part of the bridge. It's installed in `~/Library/Application Support/flame-mcp/bridge/`.
+- `impl.py`: the main part of the bridge. It's installed in `~/Library/Application Support/finns-flame-mcp/bridge/`.
 
 If a file with the same name already exists, the installer backs it up before it overwrites the file.
 
@@ -190,11 +204,11 @@ flame-mcp creates its files on disk so that only the user who started Flame can 
 
 | What | Where | How long |
 | --- | --- | --- |
-| Records of the changes that the assistant made | `~/Library/Application Support/flame-mcp/journal/` | 30 days |
+| Records of the changes that the assistant made | `~/Library/Application Support/finns-flame-mcp/journal/` | 30 days |
 | Batch setup files saved for undo | `journal/checkpoints/` | Not deleted automatically |
 | Copies saved for undo, made before the assistant deletes or edits a clip or sequence | The `flame_mcp_checkpoints` library in each project | Until they are deleted with `journal.purge_checkpoints` |
-| Operation results too large to return to the assistant directly (over about 60 KB; the assistant receives only the location of the file) | `~/Library/Application Support/flame-mcp/spill/` | 7 days (when the server starts, it deletes files older than 7 days) |
-| Bridge logs | `~/Library/Application Support/flame-mcp/logs/` | Up to 4 files (when a file reaches 2 MB, the bridge starts a new file and deletes the oldest one) |
+| Operation results too large to return to the assistant directly (over about 60 KB; the assistant receives only the location of the file) | `~/Library/Application Support/finns-flame-mcp/spill/` | 7 days (when the server starts, it deletes files older than 7 days) |
+| Bridge logs | `~/Library/Application Support/finns-flame-mcp/logs/` | Up to 4 files (when a file reaches 2 MB, the bridge starts a new file and deletes the oldest one) |
 
 ## Undo
 
@@ -230,7 +244,7 @@ Usually, you don't need to configure anything. To change a setting, pass an envi
 | `FLAME_MCP_CHECKPOINT_LIBRARY` | `flame_mcp_checkpoints` | The library where copies saved for undo are kept |
 | `FLAME_MCP_RESPONSE` | `full` | `compact`: send smaller responses to the assistant (see [Smaller responses](#smaller-responses)) |
 | `FLAME_MCP_FFMPEG` | Search the PATH, then the `imageio_ffmpeg` package | The ffmpeg that `render.still` uses to make its PNG |
-| `FLAME_MCP_STILLS_DIR` | `~/Library/Application Support/flame-mcp/stills` | Where `render.still` puts its files |
+| `FLAME_MCP_STILLS_DIR` | `~/Library/Application Support/finns-flame-mcp/stills` | Where `render.still` puts its files |
 | `FLAME_MCP_PRESETS_DIR` | `/opt/Autodesk/presets` | The directory that holds Flame's export presets, one folder per Flame version; `render.still` reads its preset from there |
 
 - Include `read` in `FLAME_MCP_ALLOW_EFFECTS`. Without it, every read is refused too.
@@ -336,7 +350,7 @@ Report it in GitHub Issues. The following information helps find the cause:
 - Your Flame and macOS versions
 - The output of `scripts/doctor.sh`
 - What **MCP Bridge > Show last error** shows
-- The relevant part of `~/Library/Application Support/flame-mcp/logs/bridge.log` (it contains file paths and project names, so paste only the parts that you're comfortable making public)
+- The relevant part of `~/Library/Application Support/finns-flame-mcp/logs/bridge.log` (it contains file paths and project names, so paste only the parts that you're comfortable making public)
 
 Report security vulnerabilities as described in [SECURITY.md](.github/SECURITY.md), not in Issues.
 
@@ -406,4 +420,4 @@ Autodesk and Flame are registered trademarks or trademarks of Autodesk, Inc. Thi
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+GPL-3.0-only. See [LICENSE](LICENSE).

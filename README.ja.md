@@ -63,7 +63,7 @@ python3.12 -m venv .venv
 インストーラは実ファイルを 2 つコピーします。
 
 - `flame_mcp_bridge.py`: Flame が起動時に読み込む入口です。`/opt/Autodesk/shared/python/` にインストールします。
-- `impl.py`: ブリッジの本体です。`~/Library/Application Support/flame-mcp/bridge/` にインストールします。
+- `impl.py`: ブリッジの本体です。`~/Library/Application Support/finns-flame-mcp/bridge/` にインストールします。
 
 同じ名前のファイルがすでにあれば、上書きする前にバックアップを作成します。
 
@@ -190,11 +190,11 @@ flame-mcp がディスクに作成するファイルは、Flame を起動した�
 
 | 内容 | 保存場所 | 保存期間 |
 | --- | --- | --- |
-| アシスタントが行った変更の記録 | `~/Library/Application Support/flame-mcp/journal/` | 30 日 |
+| アシスタントが行った変更の記録 | `~/Library/Application Support/finns-flame-mcp/journal/` | 30 日 |
 | 取り消し用に保存した Batch の setup ファイル | `journal/checkpoints/` | 自動では削除しません |
 | アシスタントがクリップやシーケンスを削除・編集する前に作成した、取り消し用の複製 | 各プロジェクトの `flame_mcp_checkpoints` ライブラリ | `journal.purge_checkpoints` で削除するまで |
-| op の結果のうち、大きすぎてアシスタントに直接返せなかったもの (約 60 KB を超えたもの。アシスタントには保存先だけを返します) | `~/Library/Application Support/flame-mcp/spill/` | 7 日 (サーバーの起動時に、7 日より古いものを削除します) |
-| ブリッジのログ | `~/Library/Application Support/flame-mcp/logs/` | 最大 4 ファイル (1 ファイルが 2 MB に達すると新しいファイルに切り替え、古いものから削除します) |
+| op の結果のうち、大きすぎてアシスタントに直接返せなかったもの (約 60 KB を超えたもの。アシスタントには保存先だけを返します) | `~/Library/Application Support/finns-flame-mcp/spill/` | 7 日 (サーバーの起動時に、7 日より古いものを削除します) |
+| ブリッジのログ | `~/Library/Application Support/finns-flame-mcp/logs/` | 最大 4 ファイル (1 ファイルが 2 MB に達すると新しいファイルに切り替え、古いものから削除します) |
 
 ## 元に戻す
 
@@ -230,7 +230,7 @@ flame-mcp がディスクに作成するファイルは、Flame を起動した�
 | `FLAME_MCP_CHECKPOINT_LIBRARY` | `flame_mcp_checkpoints` | 取り消し用の複製を保存するライブラリ |
 | `FLAME_MCP_RESPONSE` | `full` | `compact`: アシスタントに返す応答を小さくする ([応答を小さくする](#応答を小さくする) を参照) |
 | `FLAME_MCP_FFMPEG` | PATH を探し、なければ `imageio_ffmpeg` パッケージ | `render.still` が PNG を作るときに使う ffmpeg |
-| `FLAME_MCP_STILLS_DIR` | `~/Library/Application Support/flame-mcp/stills` | `render.still` がファイルを置く場所 |
+| `FLAME_MCP_STILLS_DIR` | `~/Library/Application Support/finns-flame-mcp/stills` | `render.still` がファイルを置く場所 |
 | `FLAME_MCP_PRESETS_DIR` | `/opt/Autodesk/presets` | Flame の書き出しプリセットがあるディレクトリ。Flame のバージョンごとにフォルダがある。`render.still` はここからプリセットを読む |
 
 - `FLAME_MCP_ALLOW_EFFECTS` には `read` を含めてください。含めないと、読み取りもすべて拒否されます。
@@ -336,7 +336,7 @@ GitHub の Issues で報告してください。次の情報があると、原�
 - Flame と macOS のバージョン
 - `scripts/doctor.sh` の出力
 - **MCP Bridge > Show last error** の内容
-- `~/Library/Application Support/flame-mcp/logs/bridge.log` の該当部分。ファイルパスやプロジェクト名が含まれます。公開してよい部分だけを貼ってください。
+- `~/Library/Application Support/finns-flame-mcp/logs/bridge.log` の該当部分。ファイルパスやプロジェクト名が含まれます。公開してよい部分だけを貼ってください。
 
 脆弱性は Issues ではなく [SECURITY.md](.github/SECURITY.md) の手順で報告してください。
 
@@ -406,4 +406,4 @@ Autodesk および Flame は、Autodesk, Inc. の登録商標または商標で�
 
 ## ライセンス
 
-MIT。[LICENSE](LICENSE) を参照してください。
+GPL-3.0-only。[LICENSE](LICENSE) を参照してください。

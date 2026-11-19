@@ -84,7 +84,7 @@ from p2_2a_journal_e2e import (
     version_info,
 )
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 USED_NODE_TYPES: Final[tuple[str, ...]] = (
     "Blur",
     "Comp",

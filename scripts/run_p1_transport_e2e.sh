@@ -90,7 +90,7 @@ e2e_reap_senddmp
 e2e_report_exit_route "$E2E_CLIENT"
 
 echo "--- leftover sockets (normal after a SIGKILL; no OK or NG is given) ---"
-remaining_socks=$(ls "$RUN_DIR"/flame-mcp-*.sock 2>/dev/null || true)
+remaining_socks=$(ls "$RUN_DIR"/fmp-*.sock 2>/dev/null || true)
 if [ -z "$remaining_socks" ]; then
     echo "(none)"
 else

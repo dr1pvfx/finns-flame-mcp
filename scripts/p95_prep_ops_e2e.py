@@ -46,7 +46,7 @@ from p1_mcp_e2e import RUN_DIR_DEFAULT
 from p2_2a_journal_e2e import Ctx, do, guarded, rec, save, save_stage, server_session, tx
 from p2_4_common import OUTPUT_DIR, flame_exit
 
-APP: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp"
+APP: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp"
 MOV: Final[Path] = APP / "probe_project" / "media" / "p2" / "p2_len48.mov"
 TIFS: Final[Path] = APP / "probe_project" / "media" / "u13b_src"
 SCRATCH: Final[Path] = APP / "scratch" / "p95"

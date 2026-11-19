@@ -144,7 +144,7 @@ from p2_2a_journal_e2e import (
 
 from flame_mcp.journal import Journal
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 GROUPS: Final[tuple[str, ...]] = ("A", "C", "D", "E", "F")
 WRITERS: Final[dict[str, str]] = {
     "A": "write_a",

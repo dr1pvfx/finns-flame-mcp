@@ -7,7 +7,7 @@ burst of writes.
 
 Run with the `.venv` Python. Assumes the dev bridge deployed by scripts/deploy_bridge_dev.sh
 is running inside Flame. Runs steps a to g over the socket and writes the result to
-~/Library/Application Support/flame-mcp/p1/p1_bridge_e2e_<timestamp>.json.
+~/Library/Application Support/finns-flame-mcp/p1/p1_bridge_e2e_<timestamp>.json.
 Starting and exiting Flame and detecting crashes are the job of
 scripts/run_p1_bridge_e2e.sh; this script only covers the steps after the socket is up.
 
@@ -47,9 +47,9 @@ from typing import Any
 
 import e2e_guard
 
-RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "run"
-OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p1"
-SCRATCH_DIR = Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "p1e2e"
+RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
+OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
+SCRATCH_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p1e2e"
 EXPECTED_VERSION = e2e_guard.e2e_flame_version()
 WRITE_BURST_COUNT = 40
 
@@ -60,7 +60,7 @@ def _req_id() -> str:
 
 def _find_socket(run_dir: Path, timeout: float) -> Path:
     deadline = time.monotonic() + timeout
-    pattern = str(run_dir / "flame-mcp-*.sock")
+    pattern = str(run_dir / "fmp-*.sock")
     while time.monotonic() < deadline:
         matches = sorted(glob.glob(pattern))
         if matches:

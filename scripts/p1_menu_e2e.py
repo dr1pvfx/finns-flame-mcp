@@ -17,10 +17,10 @@ Steps:
      -> wait 2 s -> hello on a new connection -> startedAt has changed (a new instance) and
      the pid is the same.
   d. The old instance survives a failed Reload: move the dev deployment target
-     `~/Library/Application Support/flame-mcp/bridge_dev/impl.py` (where
+     `~/Library/Application Support/finns-flame-mcp/bridge_dev/impl.py` (where
      scripts/deploy_bridge_dev.sh deploys; the orchestrator makes Flame read it through
      FLAME_MCP_BRIDGE_DIR; never touch the production
-     `~/Library/Application Support/flame-mcp/bridge/impl.py`) aside into scratch and replace
+     `~/Library/Application Support/finns-flame-mcp/bridge/impl.py`) aside into scratch and replace
      it with an impl.py that has a syntax error -> Reload as in c -> 2 s -> hello answers with
      the same startedAt as before (the old instance keeps running) -> with exec, check that
      `<stub>._state["error"]` holds the SyntaxError -> put the correct impl.py back -> Reload
@@ -34,7 +34,7 @@ Steps:
      the later steps; the orchestrator stops Flame.
   f. Finally, exec `flame.exit()` (not run if e found main blocked).
 
-The result is written to ~/Library/Application Support/flame-mcp/p1/p1_menu_e2e_<ts>.json.
+The result is written to ~/Library/Application Support/finns-flame-mcp/p1/p1_menu_e2e_<ts>.json.
 """
 
 from __future__ import annotations
@@ -59,16 +59,16 @@ import e2e_guard  # noqa: E402
 
 from flame_mcp import transport  # noqa: E402
 
-RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "run"
-OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p1"
+RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
+OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
 SCRATCH_DIR = (
-    Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "p1_menu_e2e"
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p1_menu_e2e"
 )
 # Development-only deployment (scripts/bridge_dev_env.sh's BRIDGE_DEV_DIR). Step d
 # overwrites this file with broken source, so it must never point at the
 # production `.../flame-mcp/bridge/impl.py` that a normal Flame session reads.
 BRIDGE_DEV_IMPL_PATH = (
-    Path.home() / "Library" / "Application Support" / "flame-mcp" / "bridge_dev" / "impl.py"
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "bridge_dev" / "impl.py"
 )
 REPO_IMPL_PATH = REPO_ROOT / "src" / "flame_mcp_bridge" / "impl.py"
 
@@ -101,7 +101,7 @@ def _br_dict(br: transport.BridgeResult) -> dict[str, Any]:
 
 def _find_socket(run_dir: Path, timeout_s: float) -> Path:
     deadline = time.monotonic() + timeout_s
-    pattern = str(run_dir / "flame-mcp-*.sock")
+    pattern = str(run_dir / "fmp-*.sock")
     while time.monotonic() < deadline:
         matches = sorted(glob.glob(pattern))
         if matches:

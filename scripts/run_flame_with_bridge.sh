@@ -59,7 +59,7 @@ fi
 
 # shellcheck source=e2e_flame_env.sh
 source "$SCRIPT_DIR/e2e_flame_env.sh"
-APP_SUPPORT="$HOME/Library/Application Support/flame-mcp"
+APP_SUPPORT="$HOME/Library/Application Support/finns-flame-mcp"
 DEV_HOOKS_DIR="$APP_SUPPORT/dev_hooks"
 # shellcheck source=bridge_dev_env.sh
 source "$SCRIPT_DIR/bridge_dev_env.sh"
@@ -94,7 +94,7 @@ BRIDGE_IMPL_SRC="${BRIDGE_IMPL_SRC:-}" "$SCRIPT_DIR/deploy_bridge_dev.sh"
 
 # A socket left by an earlier run is harmless (probe-before-bind), but removing it first makes
 # "a socket appeared" mean "this launch made it".
-rm -f "$RUN_DIR"/flame-mcp-*.sock 2>/dev/null || true
+rm -f "$RUN_DIR"/fmp-*.sock 2>/dev/null || true
 
 app_log_lines_before=0
 app_log_inode_before=""
@@ -292,7 +292,7 @@ fi
 echo "=== exit route: $outcome (client exit=${client_exit_code}) ==="
 
 echo "--- sockets must be gone (app_exited check) ---"
-remaining_socks=$(ls "$RUN_DIR"/flame-mcp-*.sock 2>/dev/null || true)
+remaining_socks=$(ls "$RUN_DIR"/fmp-*.sock 2>/dev/null || true)
 if [ -z "$remaining_socks" ]; then
     echo "OK: no sockets remain."
 else

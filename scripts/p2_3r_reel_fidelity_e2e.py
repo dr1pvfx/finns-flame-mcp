@@ -13,7 +13,7 @@ BACK INDEPENDENTLY of the ops under test -- reels and their clips, Clip nodes an
 render output). Everything happens in the probe project `flame_mcp_probe`, in Batch groups that
 are NOT current (`CUR`, created last, is the current one). The journal directory is this run's own
 (`p2/journal_p23r_e2e_<ts>/`, never the production one). No test hook is set for any server.
-Everything this script writes to disk goes under `~/Library/Application Support/flame-mcp/p2/`
+Everything this script writes to disk goes under `~/Library/Application Support/finns-flame-mcp/p2/`
 (never /tmp or /var/tmp: the Write File node's default output is /var/tmp, so its path is changed
 BEFORE any render).
 
@@ -88,7 +88,7 @@ from p2_2a_journal_e2e import (
 )
 from p2_3a_batch_e2e import ALL_SECTIONS, EVAL_MAKE_PAIR, _locate, observe, tx_world
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 ENABLE_EVAL: Final[str] = "FLAME_MCP_ENABLE_EVAL"
 GROUPS: Final[tuple[str, ...]] = ("A", "B", "C", "D", "E")
 REELS: Final[tuple[str, ...]] = ("SrcA", "EmptyB", "Keep")

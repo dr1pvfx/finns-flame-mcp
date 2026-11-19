@@ -15,7 +15,7 @@ pumps. Like a real QTimer, it fires on the thread that makes the pump call, so t
 function's own thread.
 
 Sockets and result directories use
-~/Library/Application Support/flame-mcp/scratch/p12/<short uuid>/
+~/Library/Application Support/finns-flame-mcp/scratch/p12/<short uuid>/
 instead of pytest's tmp_path, to stay within the 104-byte AF_UNIX sun_path limit.
 tmp_path lives under /private/var/folders/..., so its paths are long, and combined with
 a socket name that contains the full version string they can exceed the limit.
@@ -43,7 +43,7 @@ import pytest
 
 from flame_mcp_bridge import impl
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "flame-mcp" / "scratch" / "p12"
+SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p12"
 
 
 class FakeMainLoop:
@@ -769,7 +769,7 @@ def test_socket_and_rundir_permissions(bridge_factory: Callable[..., impl.Bridge
 def test_stale_socket_file_is_removed_then_bind_succeeds(
     bridge_factory: Callable[..., impl.Bridge], scratch_dir: Path
 ) -> None:
-    sock_path = scratch_dir / "flame-mcp-2025.2.4.sock"
+    sock_path = scratch_dir / "fmp-2025.2.4.sock"
     sock_path.write_text("stale, not a real socket")
     bridge = bridge_factory()
     bridge.start()
@@ -813,7 +813,7 @@ def test_socket_path_too_long_refuses_to_start(loop: FakeMainLoop) -> None:
         )
         with pytest.raises(RuntimeError, match="too long"):
             bridge.start()
-        assert not (long_dir / "flame-mcp-2025.2.4.sock").exists()
+        assert not (long_dir / "fmp-2025.2.4.sock").exists()
     finally:
         shutil.rmtree(long_dir, ignore_errors=True)
 

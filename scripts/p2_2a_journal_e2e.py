@@ -93,7 +93,7 @@ from p1_mcp_e2e import (  # noqa: E402
 from flame_mcp.compact import RESPONSE_ENV  # noqa: E402
 from flame_mcp.journal import Index, Journal  # noqa: E402
 
-OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "flame-mcp" / "p2"
+OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p2"
 TEST_ENV_PREFIX: Final[str] = "FLAME_MCP_TEST_"
 ENV_PAUSE: Final[str] = "FLAME_MCP_TEST_PAUSE_AFTER_PREREAD"
 ENV_EXIT: Final[str] = "FLAME_MCP_TEST_EXIT_AFTER_WRITE"

@@ -6,9 +6,9 @@
 # that loads the hooks through DL_PYTHON_HOOK_PATH.
 #
 # Targets (development and production stay completely apart):
-#   stub -> ~/Library/Application Support/flame-mcp/dev_hooks/flame_mcp_bridge.py
-#   body -> ~/Library/Application Support/flame-mcp/bridge_dev/impl.py
-# This script never touches the production body, ~/Library/Application Support/flame-mcp/bridge/
+#   stub -> ~/Library/Application Support/finns-flame-mcp/dev_hooks/flame_mcp_bridge.py
+#   body -> ~/Library/Application Support/finns-flame-mcp/bridge_dev/impl.py
+# This script never touches the production body, ~/Library/Application Support/finns-flame-mcp/bridge/
 # impl.py (scripts/install_bridge.sh owns it). The Flame started for development gets
 # FLAME_MCP_BRIDGE_DIR=<bridge_dev>, so the stub reads this copy (the path is defined in one
 # place, scripts/bridge_dev_env.sh).
@@ -20,7 +20,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-APP_SUPPORT="$HOME/Library/Application Support/flame-mcp"
+APP_SUPPORT="$HOME/Library/Application Support/finns-flame-mcp"
 DEV_HOOKS_DIR="$APP_SUPPORT/dev_hooks"
 # shellcheck source=bridge_dev_env.sh
 source "$SCRIPT_DIR/bridge_dev_env.sh"
