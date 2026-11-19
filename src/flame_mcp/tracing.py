@@ -8,6 +8,7 @@ import os
 import re
 import stat
 import time
+from collections.abc import Callable
 from contextvars import ContextVar
 from typing import Any
 from uuid import uuid4
@@ -33,17 +34,18 @@ def _write(path: str, fields: dict[str, Any]) -> None:
         _LOG.warning("The configured local Flame MCP trace could not be written.")
 
 
-def traced_call(operation: str, call: Any) -> dict[str, Any]:
+def traced_call(operation: str, call: Callable[[], dict[str, Any]]) -> dict[str, Any]:
     path = os.environ.get("FINNS_FLAME_MCP_TRACE")
     if not path:
         return call()
+    operation_id = uuid4().hex
     fields = {
         "pid": os.getpid(),
-        "id": uuid4().hex,
+        "id": operation_id,
         "parent": _TRACE.get(),
         "op": operation if _OPERATION.fullmatch(operation) else "invalid",
     }
-    token = _TRACE.set(fields["id"])
+    token = _TRACE.set(operation_id)
     start = time.monotonic_ns()
     _write(path, {**fields, "event": "start", "timeNs": time.time_ns()})
     outcome: dict[str, Any] = {"ok": False, "errorCode": "UNHANDLED"}

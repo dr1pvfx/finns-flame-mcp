@@ -2,7 +2,7 @@
 #
 # Removes what install_bridge.sh deployed.
 #
-#   stub  /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py and the flame_mcp_bridge.*.pyc files
+#   stub  /opt/Autodesk/shared/python/finns_flame_mcp_bridge.py and its matching .pyc files
 #         in its __pycache__
 #   body  impl.py and __pycache__ in ~/Library/Application Support/finns-flame-mcp/bridge/ (the
 #         directory itself only when nothing else is left in it)
@@ -117,10 +117,11 @@ echo "=== stub: $STUB_DST ==="
 _remove_file "$STUB_DST" 1
 pycache_dir="$(dirname "$STUB_DST")/__pycache__"
 if [ -d "$pycache_dir" ] && [ ! -L "$pycache_dir" ]; then
+    module_name="$(basename "$STUB_DST" .py)"
     while IFS= read -r pyc; do
         [ -n "$pyc" ] || continue
         _remove_file "$pyc" 0
-    done <<< "$(find "$pycache_dir" -maxdepth 1 -name 'flame_mcp_bridge.*.pyc')"
+    done <<< "$(find "$pycache_dir" -maxdepth 1 -name "$module_name.*.pyc")"
 fi
 
 echo "=== body: $BRIDGE_DIR ==="

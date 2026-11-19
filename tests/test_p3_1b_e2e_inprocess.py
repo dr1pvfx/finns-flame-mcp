@@ -106,7 +106,7 @@ def test_the_dry_run_compiles_every_call_and_every_transport_snippet(
     assert module.dry_run() == 0
     assert "dry run: OK" in capsys.readouterr().out
     app_support = tmp_path / "Library" / "Application Support"
-    placeholders = app_support / "flame-mcp" / "scratch" / "p31b_dry"
+    placeholders = app_support / "finns-flame-mcp" / "scratch" / "p31b_dry"
     assert (placeholders / "empty.mov").is_file()
 
 

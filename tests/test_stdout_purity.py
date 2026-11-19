@@ -160,7 +160,9 @@ def test_invalid_policy_env_fails_closed_with_no_stdout(tmp_path: Path) -> None:
 
 
 def test_the_server_subprocess_sweeps_the_run_dir_under_its_own_home(tmp_path: Path) -> None:
-    inflight_dir = tmp_path / "Library" / "Application Support" / "finns-flame-mcp" / "run" / "inflight"
+    inflight_dir = (
+        tmp_path / "Library" / "Application Support" / "finns-flame-mcp" / "run" / "inflight"
+    )
     inflight_dir.mkdir(parents=True)
     old_path = inflight_dir / "old.json"
     old_path.write_text(json.dumps({"id": "old", "label": None, "sentAt": "x"}))

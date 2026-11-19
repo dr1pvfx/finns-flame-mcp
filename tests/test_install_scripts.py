@@ -26,7 +26,9 @@ class Env:
         self.fake_bin = root / "bin"
         self.fake_bin.mkdir()
         self.stub_dir = root / "opt" / "python"
-        self.stub = self.stub_dir / "flame_mcp_bridge.py"
+        self.stub = self.stub_dir / "finns_flame_mcp_bridge.py"
+        self.stub_bytecode = self.stub_dir / "__pycache__" / f"{self.stub.stem}.cpython-311.pyc"
+        self.upstream_bytecode = self.stub_dir / "__pycache__" / "flame_mcp_bridge.cpython-311.pyc"
         self.app = self.home / "Library" / "Application Support" / "finns-flame-mcp"
         self.bridge_dir = self.app / "bridge"
         self.impl = self.bridge_dir / "impl.py"
@@ -62,7 +64,8 @@ class Env:
         self.impl.write_text(OLD)
         pycache = self.stub_dir / "__pycache__"
         pycache.mkdir()
-        (pycache / "flame_mcp_bridge.cpython-311.pyc").write_bytes(b"pyc")
+        self.stub_bytecode.write_bytes(b"pyc")
+        self.upstream_bytecode.write_bytes(b"keep")
         (pycache / "other_hook.cpython-311.pyc").write_bytes(b"keep")
         (self.bridge_dir / "__pycache__").mkdir()
         (self.bridge_dir / "__pycache__" / "impl.cpython-311.pyc").write_bytes(b"pyc")
@@ -108,10 +111,11 @@ def test_install_backs_up_replaces_and_clears_the_stub_bytecode(env: Env) -> Non
     result = env.run(INSTALL)
     assert result.returncode == 0, result.stderr
     saved = {p.name.split(".pre_install_")[0]: p for p in env.backups.iterdir()}
-    assert set(saved) == {"flame_mcp_bridge.py", "impl.py"}
+    assert set(saved) == {env.stub.name, "impl.py"}
     assert all(p.read_text() == OLD for p in saved.values())
     assert env.stub.read_bytes() == STUB_SRC.read_bytes()
-    assert not (env.stub_dir / "__pycache__" / "flame_mcp_bridge.cpython-311.pyc").exists()
+    assert not env.stub_bytecode.exists()
+    assert env.upstream_bytecode.read_bytes() == b"keep"
     assert (env.stub_dir / "__pycache__" / "other_hook.cpython-311.pyc").exists()
     assert not (env.bridge_dir / "__pycache__").exists()
 
@@ -190,10 +194,11 @@ def test_uninstall_removes_the_stub_the_body_and_their_bytecode_after_backing_up
     result = env.run(UNINSTALL)
     assert result.returncode == 0, result.stderr
     assert not env.stub.exists() and not env.bridge_dir.exists()
-    assert not (env.stub_dir / "__pycache__" / "flame_mcp_bridge.cpython-311.pyc").exists()
+    assert not env.stub_bytecode.exists()
+    assert env.upstream_bytecode.read_bytes() == b"keep"
     assert (env.stub_dir / "__pycache__" / "other_hook.cpython-311.pyc").exists()
     saved = {p.name.split(".pre_uninstall_")[0]: p for p in env.backups.iterdir()}
-    assert set(saved) == {"flame_mcp_bridge.py", "impl.py"}
+    assert set(saved) == {env.stub.name, "impl.py"}
     assert all(p.read_text() == OLD for p in saved.values())
     for directory in data:
         assert (directory / "keep.txt").read_text() == "data"

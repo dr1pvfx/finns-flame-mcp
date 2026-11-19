@@ -18,7 +18,9 @@ from flame_mcp.registry import RegisteredOperation, Registry
 from flame_mcp.transport import BridgeResult, CrashInfo
 from flame_mcp.types import Category, OperationSpec
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p14"
+SCRATCH_ROOT = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p14"
+)
 
 
 @pytest.fixture

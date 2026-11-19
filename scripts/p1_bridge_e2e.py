@@ -49,7 +49,9 @@ import e2e_guard
 
 RUN_DIR_DEFAULT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
 OUTPUT_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
-SCRATCH_DIR = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p1e2e"
+SCRATCH_DIR = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p1e2e"
+)
 EXPECTED_VERSION = e2e_guard.e2e_flame_version()
 WRITE_BURST_COUNT = 40
 

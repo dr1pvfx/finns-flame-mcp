@@ -17,7 +17,8 @@ Usage (meant to be called from scripts/run_flame_with_bridge.sh; it also runs on
 For the positive control (the old implementation), deploy a different impl.py through
 BRIDGE_IMPL_SRC of scripts/deploy_bridge_dev.sh, then call this script with --label old.
 
-The result is written to ~/Library/Application Support/finns-flame-mcp/p1/p1_stress_<label>_<ts>.json.
+The result is written under ~/Library/Application Support/finns-flame-mcp/p1/ to
+p1_stress_<label>_<ts>.json.
 """
 
 from __future__ import annotations
@@ -40,7 +41,9 @@ import e2e_guard  # noqa: E402
 from flame_mcp import transport  # noqa: E402
 
 OUTPUT_DIR: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "p1"
-RUN_DIR_DEFAULT: Final[Path] = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
+RUN_DIR_DEFAULT: Final[Path] = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "run"
+)
 
 DEFAULT_WAIT_SOCKET_S: Final[float] = 120.0
 BRIDGE_POLL_INTERVAL_S: Final[float] = 1.0

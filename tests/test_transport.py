@@ -30,7 +30,9 @@ from flame_mcp import applog, transport
 from flame_mcp_bridge import impl
 from test_bridge_impl import FakeFlame, FakeMainLoop, FakeTimer
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p13"
+SCRATCH_ROOT = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p13"
+)
 
 # Read at import time, before `_fast_client_timeouts` shrinks the live constant.
 PRODUCTION_CLIENT_TIMEOUT_MARGIN_S = transport.CLIENT_TIMEOUT_MARGIN_S
@@ -751,9 +753,7 @@ def test_discover_reads_the_features_a_bridge_announces(
 
 @pytest.mark.parametrize("features", [None, "client_handle", 7, {"a": 1}])
 def test_a_bridge_without_a_usable_features_list_has_none(run_dir: Path, features: Any) -> None:
-    bridge = FakeRawBridge(
-        run_dir / "fmp-fake.sock", _recording_handler([], features=features)
-    )
+    bridge = FakeRawBridge(run_dir / "fmp-fake.sock", _recording_handler([], features=features))
     try:
         candidate = transport._discover(run_dir)
         assert isinstance(candidate, transport.BridgeCandidate)

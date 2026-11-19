@@ -26,7 +26,9 @@ import pytest
 from flame_mcp import server as server_mod
 
 STUB_PATH = Path(__file__).resolve().parents[1] / "stub" / "flame_mcp_bridge.py"
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p12s"
+SCRATCH_ROOT = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p12s"
+)
 
 GOOD_BODY_V1 = """
 BRIDGE_ABI = 1

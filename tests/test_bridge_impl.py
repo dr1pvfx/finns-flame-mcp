@@ -43,7 +43,9 @@ import pytest
 
 from flame_mcp_bridge import impl
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p12"
+SCRATCH_ROOT = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "p12"
+)
 
 
 class FakeMainLoop:

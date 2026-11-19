@@ -147,10 +147,11 @@ _sha256() {
 }
 
 _stub_pyc_files() {
-    local pycache_dir
+    local pycache_dir module_name
     pycache_dir="$(dirname "$STUB_DST")/__pycache__"
     [ -d "$pycache_dir" ] || return 0
-    find "$pycache_dir" -maxdepth 1 -type f -name 'flame_mcp_bridge.*.pyc'
+    module_name="$(basename "$STUB_DST" .py)"
+    find "$pycache_dir" -maxdepth 1 -type f -name "$module_name.*.pyc"
 }
 
 _stage() {
@@ -181,7 +182,7 @@ if [ "$DRY_RUN" -eq 1 ]; then
             echo "[dry-run] would delete: $pyc"
         done <<< "$stub_pycs"
     else
-        echo "[dry-run] no flame_mcp_bridge.*.pyc to delete"
+        echo "[dry-run] no bytecode for the installed hook to delete"
     fi
 fi
 if [ "$DRY_RUN" -eq 0 ]; then

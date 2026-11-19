@@ -41,7 +41,9 @@ from flame_mcp_bridge import impl
 from test_bridge_impl import FakeFlame, FakeMainLoop, FakeTimer
 from test_transport import FakeRawBridge, _close_and_write_crash_handler
 
-SCRATCH_ROOT = Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "srv"
+SCRATCH_ROOT = (
+    Path.home() / "Library" / "Application Support" / "finns-flame-mcp" / "scratch" / "srv"
+)
 
 
 @pytest.fixture

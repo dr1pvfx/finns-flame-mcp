@@ -4,11 +4,12 @@ import json
 from pathlib import Path
 from threading import RLock
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
 from flame_mcp.ops import delivery, editorial_review
+from flame_mcp.runtime import ServerContext
 from flame_mcp.tracing import traced_call
 from flame_mcp.types import ServerOpError
 
@@ -45,25 +46,26 @@ class RenameFixture:
 
 def test_reviewed_rename_uses_readback_and_rejects_replay() -> None:
     rt = RenameFixture()
+    context = cast(ServerContext, rt)
     args = {"target": {"kind": "wiretap", "id": "fixture"}, "name": "New Cut"}
-    preview = editorial_review._preview(args, rt)
+    preview = editorial_review._preview(args, context)
     assert rt.name == "Original Cut"
 
     approved = {**args, "fingerprint": preview.result["fingerprint"]}
     for change in ({"name": "Changed Cut"}, {"fingerprint": "a" * 64}):
         with pytest.raises(ServerOpError, match="changed"):
-            editorial_review._apply({**approved, **change}, rt)
+            editorial_review._apply({**approved, **change}, context)
     rt.project = "Other"
     with pytest.raises(ServerOpError, match="changed"):
-        editorial_review._apply(approved, rt)
+        editorial_review._apply(approved, context)
     assert all(op == "desktop.info" for op, _ in rt.calls)
 
     rt.project = "Fixture"
-    result = editorial_review._apply(approved, rt)
+    result = editorial_review._apply(approved, context)
     assert result.journal == {"group": "fixture-group", "id": "fixture-intent"}
     assert rt.name == "New Cut"
     with pytest.raises(ServerOpError, match="already"):
-        editorial_review._apply(approved, rt)
+        editorial_review._apply(approved, context)
     assert sum(op == "desktop.rename" for op, _ in rt.calls) == 1
 
 

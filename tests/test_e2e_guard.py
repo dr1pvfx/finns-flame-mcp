@@ -282,5 +282,5 @@ def test_shared_constants_have_the_values_the_cleaner_used() -> None:
     assert e2e_guard.FATAL_ERROR_CODES == {"BRIDGE_LOST", "BRIDGE_UNAVAILABLE", "BRIDGE_AMBIGUOUS"}
     assert (e2e_guard.DEFAULT_WAIT_SOCKET_S, e2e_guard.STAGE_WAIT_S) == (120.0, 1.0)
     assert e2e_guard.EXIT_TIMEOUT_S == 5.0
-    assert e2e_guard.OUTPUT_DIR.parts[-2:] == ("flame-mcp", "p2")
-    assert e2e_guard.RUN_DIR_DEFAULT.parts[-2:] == ("flame-mcp", "run")
+    assert e2e_guard.OUTPUT_DIR.parts[-2:] == ("finns-flame-mcp", "p2")
+    assert e2e_guard.RUN_DIR_DEFAULT.parts[-2:] == ("finns-flame-mcp", "run")

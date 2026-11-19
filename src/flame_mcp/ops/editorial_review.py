@@ -37,7 +37,7 @@ _PARAMS = (
 
 def _failure(response: Mapping[str, Any]) -> ServerOpError:
     return ServerOpError(
-        as_error_code(response.get("errorCode")) or "FLAME_API_ERROR",
+        as_error_code(response.get("errorCode")),
         str(response.get("error") or "Flame did not complete the operation."),
         result=response.get("result"),
         journal=response.get("journal"),

@@ -50,8 +50,8 @@ flame-mcp が Flame に送信するのは ASCII の文字だけです。アシ�
 **1. コードを取得し、サーバーをインストールします。**
 
 ```bash
-git clone https://github.com/mnt0414/flame-mcp.git
-cd flame-mcp
+git clone https://github.com/dr1pvfx/finns-flame-mcp.git
+cd finns-flame-mcp
 python3.12 -m venv .venv
 .venv/bin/pip install -e .
 ```
@@ -62,7 +62,7 @@ python3.12 -m venv .venv
 
 インストーラは実ファイルを 2 つコピーします。
 
-- `flame_mcp_bridge.py`: Flame が起動時に読み込む入口です。`/opt/Autodesk/shared/python/` にインストールします。
+- `finns_flame_mcp_bridge.py`: Flame が起動時に読み込む入口です。`/opt/Autodesk/shared/python/` にインストールします。
 - `impl.py`: ブリッジの本体です。`~/Library/Application Support/finns-flame-mcp/bridge/` にインストールします。
 
 同じ名前のファイルがすでにあれば、上書きする前にバックアップを作成します。
@@ -80,7 +80,7 @@ scripts/doctor.sh
 Claude Code の場合は、次のコマンドを実行してください。
 
 ```bash
-claude mcp add flame -- /path/to/flame-mcp/scripts/flame_mcp_server.sh
+claude mcp add flame -- /path/to/finns-flame-mcp/scripts/flame_mcp_server.sh
 ```
 
 <details>
@@ -92,7 +92,7 @@ JSON ファイルで設定するクライアントでは、`flame_mcp_server.sh`
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh"
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh"
     }
   }
 }
@@ -245,7 +245,7 @@ flame-mcp がディスクに作成するファイルは、Flame を起動した�
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh",
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh",
       "env": { "FLAME_MCP_READONLY": "1" }
     }
   }
@@ -269,7 +269,7 @@ flame-mcp がディスクに作成するファイルは、Flame を起動した�
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh",
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh",
       "env": { "FLAME_MCP_RESPONSE": "compact" }
     }
   }

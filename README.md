@@ -55,7 +55,7 @@ There are 115 operations in 14 categories. For the full list, see [docs/ops.md](
 | | |
 | --- | --- |
 | OS | macOS |
-| Flame | 2025.2.4, 2026.2.3 |
+| Flame | Upstream native results on 2025.2.4 and 2026.2.3. This preview registered its hook in 2027.1. See [qualification](docs/qualification.md). |
 | Python | 3.11 or later (for the server) |
 | MCP client | A client that can run a local stdio server. Tested with Claude Code. |
 
@@ -64,8 +64,8 @@ flame-mcp sends only ASCII characters to Flame. Use ASCII characters in the name
 **1. Get the code and install the server.**
 
 ```bash
-git clone https://github.com/mnt0414/flame-mcp.git
-cd flame-mcp
+git clone https://github.com/dr1pvfx/finns-flame-mcp.git
+cd finns-flame-mcp
 python3.12 -m venv .venv
 .venv/bin/pip install -e .
 ```
@@ -76,7 +76,7 @@ Replace `python3.12` with any installed Python 3.11 or later. The `/usr/bin/pyth
 
 The installer copies two real files:
 
-- `flame_mcp_bridge.py`: the entry point that Flame loads when it starts. It's installed in `/opt/Autodesk/shared/python/`.
+- `finns_flame_mcp_bridge.py`: the entry point that Flame loads when it starts. It's installed in `/opt/Autodesk/shared/python/`.
 - `impl.py`: the main part of the bridge. It's installed in `~/Library/Application Support/finns-flame-mcp/bridge/`.
 
 If a file with the same name already exists, the installer backs it up before it overwrites the file.
@@ -94,7 +94,7 @@ With `--dry-run`, the installer writes nothing and only shows what it would chan
 For Claude Code, run this command:
 
 ```bash
-claude mcp add flame -- /path/to/flame-mcp/scripts/flame_mcp_server.sh
+claude mcp add flame -- /path/to/finns-flame-mcp/scripts/flame_mcp_server.sh
 ```
 
 <details>
@@ -106,7 +106,7 @@ For a client that uses a JSON settings file, put the path of `flame_mcp_server.s
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh"
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh"
     }
   }
 }
@@ -259,7 +259,7 @@ Use read-only mode to review or audit a project without changing anything.
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh",
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh",
       "env": { "FLAME_MCP_READONLY": "1" }
     }
   }
@@ -283,7 +283,7 @@ The server explains this form to the assistant in its instructions and in `flame
 {
   "mcpServers": {
     "flame": {
-      "command": "/path/to/flame-mcp/scripts/flame_mcp_server.sh",
+      "command": "/path/to/finns-flame-mcp/scripts/flame_mcp_server.sh",
       "env": { "FLAME_MCP_RESPONSE": "compact" }
     }
   }
@@ -412,7 +412,7 @@ Ask questions, make requests, and report bugs in GitHub Issues. A usage report h
 
 - The design that splits tools into catalog and do, and the registry, argument validation, and policy, are ported from [mcp-aftereffects](https://github.com/kumoproductions/mcp-aftereffects) by kumo.productions (MIT). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - [abrahamADSK/flame-mcp](https://github.com/abrahamADSK/flame-mcp) and [dgirondi/FlameMCP](https://github.com/dgirondi/FlameMCP) were references during research.
-- flame-mcp was developed with [Claude Code](https://claude.com/claude-code). The author made the design decisions, reviewed the code, and tested it in Flame.
+- The original mnt0414 Flame MCP was developed with [Claude Code](https://claude.com/claude-code). Its author made the design decisions, reviewed the code, and tested it in Flame.
 
 ## Trademarks
 
